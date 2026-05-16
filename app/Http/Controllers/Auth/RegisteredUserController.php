@@ -21,15 +21,12 @@ class RegisteredUserController extends Controller
      */
     public function create(Request $request): Response
     {
-        $host = $request->getHost();
-        $isSubdomain = count(explode('.', $host)) >= 2 && !str_contains($host, 'localhost') && !str_contains($host, '127.0.0.1');
-        
-        // Alternative check using middleware bound tenant
         $isSubdomain = app()->has('tenant');
 
         return Inertia::render('Auth/Register', [
             'isSubdomain' => $isSubdomain,
             'tenant' => $isSubdomain ? app('tenant') : null,
+            'tenants' => $isSubdomain ? [] : \App\Models\Tenant::where('is_active', true)->get(),
         ]);
     }
 

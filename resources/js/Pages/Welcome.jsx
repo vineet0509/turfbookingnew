@@ -1,7 +1,7 @@
 import { Link, Head, useForm } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 
-export default function Welcome({ auth, tenants = [] }) {
+export default function Welcome({ auth, tenants = [], plans = [] }) {
     const [activeModal, setActiveModal] = useState(null); // 'login', 'register', 'terms', 'about', 'contact'
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [scrolled, setScrolled] = useState(false);
@@ -21,6 +21,7 @@ export default function Welcome({ auth, tenants = [] }) {
         password_confirmation: '',
         role: 'owner', // Default to owner
         tenant_id: '',
+        plan_id: '',
     });
 
     const onLoginSubmit = (e) => {
@@ -89,14 +90,22 @@ export default function Welcome({ auth, tenants = [] }) {
             </nav>
 
             {/* Hero Section */}
-            <header className="hero pt-48 pb-32">
-                <div className="container mx-auto px-10 text-center relative overflow-hidden">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.05)_0%,transparent_70%)] pointer-events-none"></div>
+            <header className="hero pt-48 pb-32 relative">
+                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-20">
+                    <img 
+                        src="/brain/3cef1dc0-9cab-4f1c-86ef-c6841161c311/hero_turf_bg_1778939673185.png" 
+                        className="w-full h-full object-cover grayscale blur-[2px]" 
+                        alt="Hero Backdrop"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#03070c] via-transparent to-[#03070c]"></div>
+                </div>
+                
+                <div className="container mx-auto px-10 text-center relative z-10">
                     
                     <div className="inline-block px-6 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest mb-10 animate-fade-in">
                         🚀 #1 Sports Arena Management Tool
                     </div>
-                    <h1 className="text-7xl md:text-9xl font-black italic uppercase tracking-tighter text-white mb-10 leading-[0.85] animate-slide-up">
+                    <h1 className="text-6xl md:text-8xl font-black italic uppercase tracking-tighter text-white mb-10 leading-[0.85] animate-slide-up">
                         Run Your Arena <br />
                         <span className="text-gradient">Like a Pro</span>
                     </h1>
@@ -110,11 +119,21 @@ export default function Welcome({ auth, tenants = [] }) {
                         <a href="#demo" className="bg-white/5 border border-white/10 text-white px-12 py-5 rounded-2xl text-xs font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-all">Watch Demo</a>
                     </div>
 
-                    {/* Sports Categories */}
-                    <div className="flex flex-wrap justify-center gap-4 mt-24 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-                        {['🏏 Cricket', '⚽ Football', '🏸 Badminton', '🎾 Tennis', '🏀 Basketball'].map(sport => (
-                            <div key={sport} className="px-6 py-3 rounded-xl bg-white/5 border border-white/5 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-emerald-500 transition-all cursor-default">
-                                {sport}
+                    {/* Sports Infrastructure Showcase */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-32 max-w-6xl mx-auto animate-fade-in" style={{ animationDelay: '0.6s' }}>
+                        {[
+                            { name: 'Elite Cricket', icon: '🏏', img: '/brain/3cef1dc0-9cab-4f1c-86ef-c6841161c311/cricket_turf_bg_1778939696050.png', color: 'border-emerald-500/20' },
+                            { name: 'Pro Football', icon: '⚽', img: '/brain/3cef1dc0-9cab-4f1c-86ef-c6841161c311/football_turf_bg_1778939721662.png', color: 'border-blue-500/20' },
+                            { name: 'Badminton Pro', icon: '🏸', img: '/brain/3cef1dc0-9cab-4f1c-86ef-c6841161c311/badminton_court_bg_1778939744671.png', color: 'border-rose-500/20' }
+                        ].map((sport, i) => (
+                            <div key={i} className={`group relative h-80 rounded-[2.5rem] overflow-hidden border ${sport.color} bg-black/40 backdrop-blur-sm transition-all duration-700 hover:scale-[1.02] hover:-translate-y-2 cursor-pointer shadow-2xl`}>
+                                <img src={sport.img} className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-70 group-hover:scale-110 transition-all duration-700 grayscale-[0.5] group-hover:grayscale-0" alt={sport.name} />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                                <div className="absolute bottom-10 left-10 text-left">
+                                    <div className="text-4xl mb-4 drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">{sport.icon}</div>
+                                    <h3 className="text-2xl font-black uppercase italic tracking-tighter text-white">{sport.name}</h3>
+                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mt-2">Active Node Infrastructure</p>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -143,7 +162,7 @@ export default function Welcome({ auth, tenants = [] }) {
             <section id="features" className="py-40">
                 <div className="container mx-auto px-10">
                     <div className="text-center mb-32">
-                        <h2 className="text-6xl md:text-7xl font-black uppercase italic tracking-tighter mb-4">Everything you need to <span className="text-gradient">Win</span></h2>
+                        <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter mb-4">Everything you need to <span className="text-gradient">Win</span></h2>
                         <p className="text-slate-500 font-bold uppercase tracking-widest text-[10px] italic">Powerful features to automate your sports business</p>
                     </div>
                     
@@ -172,7 +191,7 @@ export default function Welcome({ auth, tenants = [] }) {
                             <div className="inline-block px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest mb-8">
                                 🎮 Player Experience
                             </div>
-                            <h2 className="text-6xl md:text-7xl font-black uppercase italic tracking-tighter mb-8 leading-[0.85]">
+                            <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter mb-8 leading-[0.85]">
                                 Test as a <br />
                                 <span className="text-gradient">Customer</span>
                             </h2>
@@ -203,28 +222,28 @@ export default function Welcome({ auth, tenants = [] }) {
             </section>
 
             {/* Pricing Section */}
-            <section id="pricing" className="py-48">
+            <section id="pricing" className="py-32">
                 <div className="container mx-auto px-10 text-center">
-                    <h2 className="text-7xl md:text-9xl font-black uppercase italic tracking-tighter mb-8">Simple <span className="text-emerald-500">Pricing</span></h2>
-                    <p className="text-slate-400 font-bold max-w-xl mx-auto text-xl mb-32 leading-relaxed italic uppercase tracking-widest">Start with our 10-day free trial. No credit card required.</p>
+                    <h2 className="text-5xl font-black uppercase italic tracking-tighter mb-6">Simple <span className="text-emerald-500">Pricing</span></h2>
+                    <p className="text-slate-400 font-bold max-w-lg mx-auto text-sm mb-20 leading-relaxed italic uppercase tracking-widest">Start with our 10-day free trial. No credit card required.</p>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[
                             { name: 'Starter', price: '499', features: ['1 Arena Ground', '100 Bookings / mo', 'Digital Calendar', 'Email Alerts'] },
                             { name: 'Pro Arena', price: '999', popular: true, features: ['3 Arena Grounds', 'Unlimited Bookings', 'Razorpay Integration', 'Analytics Dashboard'] },
                             { name: 'Club Elite', price: '1999', features: ['10+ Arena Grounds', 'Unlimited Everything', 'WhatsApp Automations', 'Dedicated Support'] }
                         ].map((plan, i) => (
-                            <div key={i} className={`p-16 rounded-[4rem] bg-white/[0.02] border border-white/5 flex flex-col items-center relative transition-all duration-500 hover:scale-[1.02] ${plan.popular ? 'border-emerald-500/30 bg-emerald-500/[0.01]' : ''}`}>
-                                {plan.popular && <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-emerald-500 text-black text-[9px] font-black uppercase tracking-[0.3em] px-8 py-2 rounded-full shadow-2xl shadow-emerald-500/20">Most Popular</div>}
-                                <h3 className="text-3xl font-black uppercase tracking-tight italic mb-10 text-white leading-none">{plan.name}</h3>
-                                <div className="price flex items-baseline justify-center gap-1 mb-16">
-                                    <span className="text-2xl font-black uppercase tracking-tighter italic text-slate-600">₹</span>
-                                    <span className={`text-8xl font-black tracking-tighter italic ${plan.popular ? 'text-emerald-500' : 'text-white'}`}>{plan.price}</span>
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-700">/mo</span>
+                            <div key={i} className={`p-10 rounded-[3rem] bg-white/[0.02] border border-white/5 flex flex-col items-center relative transition-all duration-500 hover:scale-[1.02] ${plan.popular ? 'border-emerald-500/30 bg-emerald-500/[0.01]' : ''}`}>
+                                {plan.popular && <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-emerald-500 text-black text-[8px] font-black uppercase tracking-[0.3em] px-6 py-1.5 rounded-full shadow-2xl shadow-emerald-500/20">Most Popular</div>}
+                                <h3 className="text-xl font-black uppercase tracking-tight italic mb-8 text-white leading-none">{plan.name}</h3>
+                                <div className="price flex items-baseline justify-center gap-1 mb-10">
+                                    <span className="text-xl font-black uppercase tracking-tighter italic text-slate-600">₹</span>
+                                    <span className={`text-6xl font-black tracking-tighter italic ${plan.popular ? 'text-emerald-500' : 'text-white'}`}>{plan.price}</span>
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-slate-700">/mo</span>
                                 </div>
-                                <ul className="space-y-6 mb-20 flex-1 w-full">
+                                <ul className="space-y-4 mb-12 flex-1 w-full">
                                     {plan.features.map(f => (
-                                        <li key={f} className="text-xs font-black uppercase tracking-widest text-slate-500 flex items-center gap-4">
+                                        <li key={f} className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-3">
                                             <span className="text-emerald-500">✅</span> {f}
                                         </li>
                                     ))}
@@ -252,23 +271,53 @@ export default function Welcome({ auth, tenants = [] }) {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-20 flex-1">
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-20 flex-1">
                             {[
-                                { title: 'Platform', links: ['Features', 'Pricing', 'Live Demo', 'Mobile App'] },
-                                { title: 'Company', links: ['About Us', 'Contact Support', 'Success Stories'], actions: { 'About Us': () => setActiveModal('about'), 'Contact Support': () => setActiveModal('contact') } },
-                                { title: 'Legal', links: ['Privacy Protocol', 'Terms of Service', 'Cookie Policy'], actions: { 'Terms of Service': () => setActiveModal('terms') } },
+                                { 
+                                    title: 'Platform', 
+                                    links: ['Features', 'Pricing', 'Live Demo'],
+                                    hrefs: { 'Features': '#features', 'Pricing': '#pricing', 'Live Demo': '#demo' }
+                                },
+                                { 
+                                    title: 'Access Center', 
+                                    links: ['Login to Portal', 'Deploy New Arena', 'Athlete Network'],
+                                    actions: { 
+                                        'Login to Portal': () => setActiveModal('login'), 
+                                        'Deploy New Arena': () => setActiveModal('register'),
+                                        'Athlete Network': () => {
+                                            setActiveModal('register');
+                                            registerForm.setData('role', 'customer');
+                                        }
+                                    } 
+                                },
+                                { 
+                                    title: 'Intelligence', 
+                                    links: ['About Us', 'Contact Support', 'Node Status'], 
+                                    actions: { 'About Us': () => setActiveModal('about'), 'Contact Support': () => setActiveModal('contact') } 
+                                },
+                                { 
+                                    title: 'Governance', 
+                                    links: ['Privacy Protocol', 'Terms of Service', 'Cookie Policy'], 
+                                    actions: { 'Terms of Service': () => setActiveModal('terms') } 
+                                },
                             ].map((col, i) => (
                                 <div key={i}>
                                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white mb-10 italic"># {col.title}</h4>
                                     <ul className="space-y-5">
                                         {col.links.map(link => (
                                             <li key={link}>
-                                                <button 
-                                                    onClick={() => col.actions && col.actions[link] ? col.actions[link]() : null}
-                                                    className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-emerald-400 transition-all text-left"
-                                                >
-                                                    {link}
-                                                </button>
+                                                {col.hrefs && col.hrefs[link] ? (
+                                                    <a href={col.hrefs[link]} className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-emerald-400 transition-all text-left">
+                                                        {link}
+                                                    </a>
+                                                ) : (
+                                                    <button 
+                                                        onClick={() => col.actions && col.actions[link] ? col.actions[link]() : null}
+                                                        className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-emerald-400 transition-all text-left"
+                                                    >
+                                                        {link}
+                                                    </button>
+                                                )}
                                             </li>
                                         ))}
                                     </ul>
@@ -339,7 +388,7 @@ export default function Welcome({ auth, tenants = [] }) {
                     <div className="modal-box animate-slide-up" onClick={e => e.stopPropagation()}>
                         <button onClick={closeAllModals} className="modal-close-btn">✕</button>
                         <div className="text-6xl mb-10 drop-shadow-[0_0_20px_rgba(59,130,246,0.3)]">{registerForm.data.role === 'customer' ? '🏃' : '🏟️'}</div>
-                        <h2 className="text-4xl font-black uppercase tracking-tighter italic mb-2 text-white">
+                        <h2 className="text-3xl font-black uppercase tracking-tighter italic mb-2 text-white">
                             {registerForm.data.role === 'customer' ? 'Athlete Join' : 'Deploy Arena'}
                         </h2>
                         <p className="text-slate-500 font-black uppercase tracking-[0.2em] text-[9px] mb-10 italic ms-1">
@@ -414,6 +463,24 @@ export default function Welcome({ auth, tenants = [] }) {
                                 </div>
                             )}
 
+                            {registerForm.data.role === 'owner' && (
+                                <div className="form-group animate-fade-in">
+                                    <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 mb-4 ms-2">Select Your Operations Plan</label>
+                                    <select 
+                                        className="form-control py-6 italic text-sm bg-white/5 border-white/5"
+                                        value={registerForm.data.plan_id}
+                                        onChange={e => registerForm.setData('plan_id', e.target.value)}
+                                        required
+                                    >
+                                        <option value="">-- Choose Scaling Tier --</option>
+                                        {plans.map(p => (
+                                            <option key={p.id} value={p.id}>{p.display_name} - ₹{p.price_monthly}/mo</option>
+                                        ))}
+                                    </select>
+                                    <p className="mt-4 text-[8px] font-bold text-slate-600 uppercase tracking-widest ms-2 italic">Select the plan that fits your arena scale. You can upgrade later.</p>
+                                </div>
+                            )}
+
                             <button type="submit" disabled={registerForm.processing} className="btn-premium w-full py-8 text-xs font-black uppercase italic tracking-[0.3em] shadow-[0_20px_50px_rgba(16,185,129,0.3)]">
                                 {registerForm.processing ? 'INITIALIZING...' : 'COMMENCE DEPLOYMENT →'}
                             </button>
@@ -425,33 +492,33 @@ export default function Welcome({ auth, tenants = [] }) {
             {/* About Modal */}
             {activeModal === 'about' && (
                 <div className="modal-overlay" onClick={closeAllModals}>
-                    <div className="modal-box max-w-3xl animate-slide-up" onClick={e => e.stopPropagation()}>
-                        <div className="absolute top-0 right-0 p-16 text-[12rem] opacity-[0.03] font-black italic tracking-tighter uppercase leading-none pointer-events-none">STORY</div>
-                        <button onClick={closeAllModals} className="modal-close-btn">✕</button>
+                    <div className="modal-box max-w-xl animate-slide-up" onClick={e => e.stopPropagation()}>
+                        <div className="absolute bottom-0 right-0 p-12 text-5xl opacity-[0.08] font-black italic tracking-tighter uppercase leading-none pointer-events-none">STORY</div>
+                        <button onClick={closeAllModals} className="modal-close-btn top-8 right-8">✕</button>
                         
-                        <div className="flex items-center gap-8 mb-20">
-                            <div className="w-24 h-24 rounded-[2.5rem] bg-emerald-500/10 flex items-center justify-center text-5xl italic font-black shadow-2xl">🚀</div>
+                        <div className="flex items-center gap-6 mb-12">
+                            <div className="w-16 h-16 rounded-3xl bg-emerald-500/10 flex items-center justify-center text-3xl italic font-black shadow-2xl">🚀</div>
                             <div>
-                                <h2 className="text-4xl font-black uppercase italic tracking-tighter text-white">Our Story</h2>
-                                <p className="text-[9px] font-black uppercase tracking-[0.3em] text-emerald-400 italic">Transforming Arena Management since 2026</p>
+                                <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white">Our Story</h2>
+                                <p className="text-[8px] font-black uppercase tracking-[0.3em] text-emerald-400 italic">Transforming Arena Management since 2026</p>
                             </div>
                         </div>
 
-                        <div className="grid md:grid-cols-2 gap-20">
-                            <div className="text-slate-500 font-bold leading-relaxed space-y-8 text-lg uppercase tracking-widest italic">
-                                <p>TurfBook was born out of a simple observation: sports arena owners were spending too much time on paperwork and phone calls, and not enough time growing their communities.</p>
-                                <p>Partnering with <strong className="text-white">Vynkra Technologies</strong>, we've built a system that doesn't just manage bookings—it scales businesses. We believe that every ground, from the smallest cage to the largest stadium, deserves professional-grade digital tools.</p>
+                        <div className="space-y-12">
+                            <div className="text-slate-500 font-bold leading-relaxed space-y-6 text-base uppercase tracking-widest italic">
+                                <p>TurfBook was born out of a simple observation: sports arena owners were spending too much time on paperwork and not enough time growing their communities.</p>
+                                <p>Partnering with <strong className="text-white">Vynkra Technologies</strong>, we've built a system that scales businesses.</p>
                                 
-                                <div className="p-8 bg-emerald-500/5 border-l-4 border-emerald-500 rounded-e-3xl">
-                                    <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-3 italic">The Mission</h4>
-                                    <p className="text-sm text-slate-600 italic font-black">To build the world's most intuitive and powerful operating system for sports communities.</p>
+                                <div className="p-6 bg-emerald-500/5 border-l-4 border-emerald-500 rounded-e-2xl">
+                                    <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-emerald-400 mb-2 italic">The Mission</h4>
+                                    <p className="text-xs text-slate-600 italic font-black">To build the world's most powerful operating system for sports communities.</p>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-8">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
                                 {[
-                                    { label: 'Active Arenas', value: '500+', color: 'text-emerald-500' },
-                                    { label: 'Daily Players', value: '10k+', color: 'text-blue-500' },
+                                    { label: 'Arenas', value: '500+', color: 'text-emerald-500' },
+                                    { label: 'Players', value: '10k+', color: 'text-blue-500' },
                                     { label: 'Uptime', value: '99.9%', color: 'text-amber-500' },
                                     { label: 'Expert Support', value: '24/7', color: 'text-rose-500' }
                                 ].map((stat, i) => (

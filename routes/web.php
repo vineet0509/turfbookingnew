@@ -11,7 +11,8 @@ Route::group([], function () {
         return Inertia::render('Welcome', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
-            'tenants' => \App\Models\Tenant::where('status', 'active')->get(),
+            'tenants' => \App\Models\Tenant::where('is_active', true)->get(),
+            'plans' => \App\Models\SubscriptionPlan::all(),
             'laravelVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
         ]);

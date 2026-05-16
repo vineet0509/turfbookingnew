@@ -115,7 +115,7 @@ export default function AuthenticatedLayout({ header, children }) {
                 {/* Top Bar */}
                 <header className="topbar">
                     <div className="topbar-left">
-                        <h1 className="page-title italic uppercase tracking-tighter font-black">{header || 'Platform Control Center'}</h1>
+                        <h1 className="page-title italic uppercase tracking-tighter font-black text-2xl">{header || 'Platform Control Center'}</h1>
                         <span className="topbar-sub">Welcome back, {user.name}! 👋</span>
                     </div>
                     
