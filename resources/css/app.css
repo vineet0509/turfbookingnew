@@ -68,7 +68,7 @@
     }
 
     .sidebar-logo {
-        @apply flex items-center gap-3 px-8 pb-8 mb-6 border-b border-white/5;
+        @apply flex items-center gap-3 px-8 pb-8 mb-6 border-b border-white/5 flex-shrink-0;
     }
 
     .logo-icon {
@@ -100,7 +100,7 @@
     }
 
     .sidebar-support-card {
-        @apply mx-4 mb-4 p-5 rounded-3xl bg-white/[0.02] border border-white/5 relative overflow-hidden transition-all duration-500 hover:bg-white/[0.04];
+        @apply mx-4 mb-4 p-5 rounded-3xl bg-white/[0.02] border border-white/5 relative overflow-hidden transition-all duration-500 hover:bg-white/[0.04] flex-shrink-0;
     }
 
     .sidebar-support-card::after {
@@ -125,7 +125,7 @@
     }
 
     .sidebar-footer {
-        @apply mt-auto p-8 border-t border-white/5 flex items-center justify-between gap-4;
+        @apply mt-auto p-8 border-t border-white/5 flex items-center justify-between gap-4 flex-shrink-0;
     }
 
     .user-info {
