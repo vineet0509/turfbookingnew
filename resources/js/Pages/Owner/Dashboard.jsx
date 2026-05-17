@@ -49,6 +49,12 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
         setActiveTab(initialTab);
     }, [initialTab]);
 
+    useEffect(() => {
+        if (tenant?.turfs?.length > 0 && !manualBookingForm.data.turf_id) {
+            manualBookingForm.setData('turf_id', tenant.turfs[0].id);
+        }
+    }, [tenant?.turfs]);
+
     const stats = [
         { label: 'Total Turfs', value: tenant.turfs?.length || 0, icon: '🏟️', color: 'emerald' },
         { label: 'Today\'s Bookings', value: bookings.filter(b => b.date === new Date().toISOString().split('T')[0]).length, icon: '📅', color: 'blue' },
@@ -206,7 +212,7 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
                         </div>
 
                         <div className="turfs-grid">
-                            {tenant.turfs.map(turf => (
+                            {(tenant?.turfs || []).map(turf => (
                                 <div key={turf.id} className="turf-card">
                                     <div className="turf-header">
                                         <h3 className="font-black italic uppercase tracking-tight text-white">{turf.name}</h3>
@@ -430,7 +436,7 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
                                         onChange={e => manualBookingForm.setData('turf_id', e.target.value)}
                                         required
                                     >
-                                        {tenant.turfs.map(t => (
+                                        {(tenant?.turfs || []).map(t => (
                                             <option key={t.id} value={t.id}>{t.name}</option>
                                         ))}
                                     </select>

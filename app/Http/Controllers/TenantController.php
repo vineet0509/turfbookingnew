@@ -8,6 +8,7 @@ use App\Models\TurfGround;
 use App\Models\Slot;
 use Inertia\Inertia;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class TenantController extends Controller
 {
