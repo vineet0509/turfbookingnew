@@ -58,6 +58,12 @@ export function Link({ href, children, method = 'get', as = 'a', data = {}, ...p
       e.preventDefault();
       try {
         const res = await api[method.toLowerCase()](href, data);
+        if (href.includes('logout')) {
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('user');
+          window.location.href = prefixBasename('/');
+          return;
+        }
         if (res.data.access_token) {
           localStorage.setItem('auth_token', res.data.access_token);
         }
@@ -69,6 +75,11 @@ export function Link({ href, children, method = 'get', as = 'a', data = {}, ...p
         }
       } catch (err) {
         console.error(err);
+        if (href.includes('logout')) {
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('user');
+          window.location.href = prefixBasename('/');
+        }
       }
     };
     return (
@@ -125,6 +136,12 @@ export function useForm(initialValues = {}) {
         options.onSuccess({ props: res.data });
       }
       
+      if (url.includes('logout')) {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user');
+        window.location.href = prefixBasename('/');
+        return;
+      }
       if (res.data.access_token) {
         localStorage.setItem('auth_token', res.data.access_token);
       }
@@ -183,6 +200,12 @@ export const router = {
   post: async (url, data, options = {}) => {
     try {
       const res = await api.post(url, data);
+      if (url.includes('logout')) {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user');
+        window.location.href = prefixBasename('/');
+        return;
+      }
       if (res.data.access_token) {
         localStorage.setItem('auth_token', res.data.access_token);
       }
@@ -194,6 +217,12 @@ export const router = {
         window.location.href = prefixBasename(res.data.redirect);
       }
     } catch (err) {
+      if (url.includes('logout')) {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user');
+        window.location.href = prefixBasename('/');
+        return;
+      }
       if (options.onError) options.onError(err);
     }
   },
@@ -219,10 +248,12 @@ export const router = {
       const res = await api.delete(url);
       if (options.onSuccess) options.onSuccess(res);
       
-      // If logging out or deleting, remove local storage auth keys
+      // If logging out or deleting, remove local storage auth keys and redirect to home
       if (url.includes('logout')) {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user');
+        window.location.href = prefixBasename('/');
+        return;
       }
       
       if (res.data.redirect) {
