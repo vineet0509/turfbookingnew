@@ -6,6 +6,10 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
     const [activeTab, setActiveTab] = useState(initialTab);
     const [showBookingModal, setShowBookingModal] = useState(false);
 
+    useEffect(() => {
+        setActiveTab(initialTab);
+    }, [initialTab]);
+
     const manualBookingForm = useForm({
         customer_name: '',
         customer_phone: '',
