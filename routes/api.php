@@ -55,6 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('owner')->group(function () {
         Route::get('/dashboard-data', [TenantController::class, 'dashboard']);
         Route::post('/setup', [TenantController::class, 'setup']);
+        Route::post('/settings', [TenantController::class, 'updateSettings'])->name('owner.settings.update');
         Route::post('/turfs', [TenantController::class, 'storeTurf']);
         Route::post('/turfs/{turf}/slots', [TenantController::class, 'generateSlots']);
         Route::post('/bookings/manual', [TenantController::class, 'manualBooking']);

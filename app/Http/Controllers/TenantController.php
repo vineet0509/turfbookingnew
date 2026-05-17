@@ -232,4 +232,36 @@ class TenantController extends Controller
 
         return redirect()->back()->with('success', 'Manual booking recorded.');
     }
+
+    /**
+     * Update the tenant settings configuration.
+     */
+    public function updateSettings(Request $request)
+    {
+        $tenant = $request->user()->ownedTenant;
+
+        if (!$tenant) {
+            abort(403, 'No tenant found for user.');
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'pincode' => 'nullable|string|max:20',
+            'monthly_pass_price' => 'numeric|min:0',
+            'monthly_pass_bookings' => 'integer|min:0',
+            'description' => 'nullable|string',
+            'instagram_url' => 'nullable|string|max:255',
+            'facebook_url' => 'nullable|string|max:255',
+            'whatsapp_number' => 'nullable|string|max:20',
+            'razorpay_key_id' => 'nullable|string|max:255',
+            'razorpay_key_secret' => 'nullable|string|max:255',
+        ]);
+
+        $tenant->update($validated);
+
+        return redirect()->back()->with('success', 'Arena configuration committed successfully.');
+    }
 }

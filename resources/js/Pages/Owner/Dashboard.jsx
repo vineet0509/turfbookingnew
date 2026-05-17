@@ -23,6 +23,22 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
         pitch_type: 'Natural Grass',
     });
 
+    const settingsForm = useForm({
+        name: tenant.name || '',
+        phone: tenant.phone || '',
+        razorpay_key_id: tenant.razorpay_key_id || '',
+        razorpay_key_secret: tenant.razorpay_key_secret || '',
+        city: tenant.city || '',
+        state: tenant.state || '',
+        pincode: tenant.pincode || '',
+        monthly_pass_price: tenant.monthly_pass_price || 0,
+        monthly_pass_bookings: tenant.monthly_pass_bookings || 30,
+        description: tenant.description || '',
+        instagram_url: tenant.instagram_url || '',
+        facebook_url: tenant.facebook_url || '',
+        whatsapp_number: tenant.whatsapp_number || '',
+    });
+
     const [showTurfModal, setShowTurfModal] = useState(false);
 
     const submitManualBooking = (e) => {
@@ -41,6 +57,15 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
             onSuccess: () => {
                 setShowTurfModal(false);
                 addTurfForm.reset();
+            },
+        });
+    };
+
+    const submitSettings = (e) => {
+        e.preventDefault();
+        settingsForm.post(route('owner.settings.update'), {
+            onSuccess: () => {
+                alert('Arena configurations committed successfully!');
             },
         });
     };
@@ -304,24 +329,47 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
                 )}
 
                 {activeTab === 'settings' && (
-                    <div className="panel p-12 max-w-5xl">
+                    <form onSubmit={submitSettings} className="panel p-12 max-w-5xl">
                         <h3 className="text-2xl font-black uppercase tracking-tighter italic text-white mb-12">⚙️ Arena Infrastructure Profile</h3>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
                             <div className="space-y-10">
                                 <div className="space-y-4">
                                     <label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 italic">Arena Network Name</label>
-                                    <input type="text" className="form-control text-sm font-bold tracking-tight bg-white/5" defaultValue={tenant.name} />
+                                    <input 
+                                        type="text" 
+                                        className="form-control text-sm font-bold tracking-tight bg-white/5" 
+                                        value={settingsForm.data.name} 
+                                        onChange={e => settingsForm.setData('name', e.target.value)} 
+                                        required 
+                                    />
                                 </div>
                                 <div className="space-y-4">
                                     <label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 italic">Central Communications (Phone)</label>
-                                    <input type="text" className="form-control text-sm font-bold tracking-tight bg-white/5" defaultValue={tenant.phone} />
+                                    <input 
+                                        type="text" 
+                                        className="form-control text-sm font-bold tracking-tight bg-white/5" 
+                                        value={settingsForm.data.phone} 
+                                        onChange={e => settingsForm.setData('phone', e.target.value)} 
+                                    />
                                 </div>
                                 <div className="p-10 bg-emerald-500/5 border border-emerald-500/10 rounded-[2.5rem] relative overflow-hidden group">
                                     <div className="absolute top-0 right-0 p-8 text-4xl opacity-5 group-hover:opacity-10 transition-opacity">💳</div>
                                     <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-400 mb-8 italic">Revenue Gateway Integration</h4>
                                     <div className="space-y-6">
-                                        <input type="password" placeholder="Razorpay Key ID" className="form-control border-emerald-500/10" />
-                                        <input type="password" placeholder="Razorpay Secret Hash" className="form-control border-emerald-500/10" />
+                                        <input 
+                                            type="password" 
+                                            placeholder="Razorpay Key ID" 
+                                            className="form-control border-emerald-500/10" 
+                                            value={settingsForm.data.razorpay_key_id} 
+                                            onChange={e => settingsForm.setData('razorpay_key_id', e.target.value)} 
+                                        />
+                                        <input 
+                                            type="password" 
+                                            placeholder="Razorpay Secret Hash" 
+                                            className="form-control border-emerald-500/10" 
+                                            value={settingsForm.data.razorpay_key_secret} 
+                                            onChange={e => settingsForm.setData('razorpay_key_secret', e.target.value)} 
+                                        />
                                     </div>
                                     <p className="text-[9px] font-bold text-slate-600 mt-6 uppercase tracking-widest">Connect your production Razorpay keys to enable direct athlete settlements.</p>
                                 </div>
@@ -330,48 +378,101 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
                                 <div className="grid grid-cols-2 gap-8">
                                     <div className="space-y-4">
                                         <label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 italic">Operational City Hub</label>
-                                        <input type="text" className="form-control text-sm font-bold tracking-tight bg-white/5" defaultValue={tenant.city} />
+                                        <input 
+                                            type="text" 
+                                            className="form-control text-sm font-bold tracking-tight bg-white/5" 
+                                            value={settingsForm.data.city} 
+                                            onChange={e => settingsForm.setData('city', e.target.value)} 
+                                        />
                                     </div>
                                     <div className="space-y-4">
                                         <label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 italic">State / Province</label>
-                                        <input type="text" className="form-control text-sm font-bold tracking-tight bg-white/5" defaultValue={tenant.state} />
+                                        <input 
+                                            type="text" 
+                                            className="form-control text-sm font-bold tracking-tight bg-white/5" 
+                                            value={settingsForm.data.state} 
+                                            onChange={e => settingsForm.setData('state', e.target.value)} 
+                                        />
                                     </div>
                                 </div>
                                 <div className="space-y-4">
                                     <label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 italic">Pincode / ZIP</label>
-                                    <input type="text" className="form-control text-sm font-bold tracking-tight bg-white/5" defaultValue={tenant.pincode} />
+                                    <input 
+                                        type="text" 
+                                        className="form-control text-sm font-bold tracking-tight bg-white/5" 
+                                        value={settingsForm.data.pincode} 
+                                        onChange={e => settingsForm.setData('pincode', e.target.value)} 
+                                    />
                                 </div>
                                 <div className="p-10 bg-blue-500/5 border border-blue-500/10 rounded-[2.5rem] relative overflow-hidden group">
                                     <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 mb-8 italic">Monthly Pass Configuration</h4>
                                     <div className="grid grid-cols-2 gap-8">
                                         <div className="space-y-4">
                                             <label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 italic">Pass Price (₹)</label>
-                                            <input type="number" className="form-control border-blue-500/10" defaultValue={tenant.monthly_pass_price} />
+                                            <input 
+                                                type="number" 
+                                                className="form-control border-blue-500/10" 
+                                                value={settingsForm.data.monthly_pass_price} 
+                                                onChange={e => settingsForm.setData('monthly_pass_price', e.target.value)} 
+                                            />
                                         </div>
                                         <div className="space-y-4">
                                             <label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 italic">Included Sessions</label>
-                                            <input type="number" className="form-control border-blue-500/10" defaultValue={tenant.monthly_pass_bookings} />
+                                            <input 
+                                                type="number" 
+                                                className="form-control border-blue-500/10" 
+                                                value={settingsForm.data.monthly_pass_bookings} 
+                                                onChange={e => settingsForm.setData('monthly_pass_bookings', e.target.value)} 
+                                            />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="space-y-10">
+                            <div className="space-y-10 lg:col-span-2">
                                 <div className="space-y-4">
                                     <label className="block text-[10px] font-black uppercase tracking-widest text-slate-600 italic">Arena Technical Description</label>
-                                    <textarea className="form-control h-32 text-sm font-bold tracking-tight bg-white/5 leading-relaxed" defaultValue={tenant.description}></textarea>
+                                    <textarea 
+                                        className="form-control h-32 text-sm font-bold tracking-tight bg-white/5 leading-relaxed" 
+                                        value={settingsForm.data.description} 
+                                        onChange={e => settingsForm.setData('description', e.target.value)}
+                                    ></textarea>
                                 </div>
                                 <div className="p-10 bg-slate-500/5 border border-white/5 rounded-[2.5rem]">
                                     <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-8 italic">Social Connectivity</h4>
                                     <div className="space-y-6">
-                                        <input type="text" placeholder="Instagram URL" className="form-control bg-transparent" defaultValue={tenant.instagram_url} />
-                                        <input type="text" placeholder="Facebook URL" className="form-control bg-transparent" defaultValue={tenant.facebook_url} />
-                                        <input type="text" placeholder="WhatsApp Number" className="form-control bg-transparent" defaultValue={tenant.whatsapp_number} />
+                                        <input 
+                                            type="text" 
+                                            placeholder="Instagram URL" 
+                                            className="form-control bg-transparent" 
+                                            value={settingsForm.data.instagram_url} 
+                                            onChange={e => settingsForm.setData('instagram_url', e.target.value)} 
+                                        />
+                                        <input 
+                                            type="text" 
+                                            placeholder="Facebook URL" 
+                                            className="form-control bg-transparent" 
+                                            value={settingsForm.data.facebook_url} 
+                                            onChange={e => settingsForm.setData('facebook_url', e.target.value)} 
+                                        />
+                                        <input 
+                                            type="text" 
+                                            placeholder="WhatsApp Number" 
+                                            className="form-control bg-transparent" 
+                                            value={settingsForm.data.whatsapp_number} 
+                                            onChange={e => settingsForm.setData('whatsapp_number', e.target.value)} 
+                                        />
                                     </div>
                                 </div>
-                                <button className="btn-premium w-full py-6 text-xs uppercase font-black italic tracking-[0.3em] shadow-[0_20px_50px_rgba(16,185,129,0.2)]">Commit Configuration →</button>
+                                <button 
+                                    type="submit" 
+                                    disabled={settingsForm.processing} 
+                                    className="btn-premium w-full py-6 text-xs uppercase font-black italic tracking-[0.3em] shadow-[0_20px_50px_rgba(16,185,129,0.2)]"
+                                >
+                                    {settingsForm.processing ? 'COMMITTING CONFIGURATION...' : 'Commit Configuration →'}
+                                </button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 )}
 
                 {/* Manual Booking Modal */}
