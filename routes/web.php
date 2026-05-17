@@ -43,6 +43,13 @@ Route::get('/run-migrations-secret', function () {
         
         $directRecreateMessage = "Directly dropped and recreated 'personal_access_tokens' table with UUID support successfully!<br>";
 
+        // Clear all Laravel caches (very important for Hostinger shared hosting)
+        \Illuminate\Support\Facades\Artisan::call('route:clear');
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        $cacheMessage = "All Laravel caches (routes, config, cache, views) cleared successfully!<br>";
+
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         $migrateOutput = \Illuminate\Support\Facades\Artisan::output();
         
@@ -54,6 +61,7 @@ Route::get('/run-migrations-secret', function () {
         
         return '<h3>Deployment Direct Correction Success!</h3>' . 
                '<p>' . $directRecreateMessage . '</p>' .
+               '<p>' . $cacheMessage . '</p>' .
                '<strong>Migration Output:</strong><pre>' . e($migrateOutput) . '</pre><br>' .
                '<strong>Seeding Output:</strong><pre>' . e($seedOutput) . '</pre>';
     } catch (\Exception $e) {
