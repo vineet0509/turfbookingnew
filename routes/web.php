@@ -22,6 +22,26 @@ Route::domain('{subdomain}.' . $domain)->group(function () {
     Route::get('/booking/{booking}/success', function () { return view('app'); })->name('tenant.success');
 });
 
+// Utility route to run migrations and seed subscription plans on production shared hosting
+Route::get('/run-migrations-secret', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $migrateOutput = \Illuminate\Support\Facades\Artisan::output();
+        
+        \Illuminate\Support\Facades\Artisan::call('db:seed', [
+            '--class' => 'Database\\Seeders\\SubscriptionPlanSeeder',
+            '--force' => true
+        ]);
+        $seedOutput = \Illuminate\Support\Facades\Artisan::output();
+        
+        return '<h3>Migrations & Seeding Run Successfully!</h3>' . 
+               '<strong>Migration Output:</strong><pre>' . e($migrateOutput) . '</pre><br>' .
+               '<strong>Seeding Output:</strong><pre>' . e($seedOutput) . '</pre>';
+    } catch (\Exception $e) {
+        return '<h3>Deployment Failed!</h3><pre>' . e($e->getMessage()) . '</pre>';
+    }
+});
+
 // Main site routes mapped to React SPA
 Route::get('/', function () { return view('app'); })->name('home');
 Route::get('/login', function () { return view('app'); })->name('login');
