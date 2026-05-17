@@ -1,5 +1,18 @@
 import axios from 'axios';
 
+const getBasename = () => {
+  if (window.APP_URL) {
+    try {
+      const url = new URL(window.APP_URL);
+      const pathname = url.pathname.replace(/\/$/, '');
+      return pathname;
+    } catch (e) {
+      return '';
+    }
+  }
+  return '';
+};
+
 const api = axios.create({
   baseURL: window.API_URL || '/api',
   withCredentials: true,
@@ -15,21 +28,36 @@ api.interceptors.request.use(config => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  
+  if (config.url) {
+    let url = config.url;
+    if (window.APP_URL && url.startsWith(window.APP_URL)) {
+      url = url.substring(window.APP_URL.length);
+    } else {
+      try {
+        const parsed = new URL(url);
+        if (parsed.origin === window.location.origin) {
+          const basename = getBasename();
+          let pathname = parsed.pathname;
+          if (basename && pathname.startsWith(basename)) {
+            pathname = pathname.substring(basename.length);
+          }
+          url = pathname + parsed.search + parsed.hash;
+        }
+      } catch (e) {}
+    }
+    
+    // If the URL already contains the /api prefix, strip it to prevent double-prefixing
+    if (url.startsWith('/api')) {
+      url = url.substring(4);
+    }
+    
+    config.url = url;
+  }
+  
   return config;
 });
 
-const getBasename = () => {
-  if (window.APP_URL) {
-    try {
-      const url = new URL(window.APP_URL);
-      const pathname = url.pathname.replace(/\/$/, '');
-      return pathname;
-    } catch (e) {
-      return '';
-    }
-  }
-  return '';
-};
 
 api.interceptors.response.use(response => response, error => {
   if (error.response && error.response.status === 401) {
