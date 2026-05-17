@@ -27,6 +27,33 @@ const prefixBasename = (url) => {
   return `${basename}${url}`;
 };
 
+const cleanUrl = (url) => {
+  if (!url) return '';
+  let cleaned = url;
+  
+  if (window.APP_URL && cleaned.startsWith(window.APP_URL)) {
+    cleaned = cleaned.substring(window.APP_URL.length);
+  } else {
+    try {
+      const parsed = new URL(cleaned);
+      if (parsed.origin === window.location.origin) {
+        cleaned = parsed.pathname + parsed.search + parsed.hash;
+      }
+    } catch (e) {}
+  }
+  
+  const basename = getBasename();
+  if (basename && cleaned.startsWith(basename)) {
+    cleaned = cleaned.substring(basename.length);
+  }
+  
+  if (!cleaned.startsWith('/')) {
+    cleaned = '/' + cleaned;
+  }
+  
+  return cleaned;
+};
+
 // Context for global state (shared Inertia props)
 const PageContext = createContext(null);
 
@@ -90,8 +117,9 @@ export function Link({ href, children, method = 'get', as = 'a', data = {}, ...p
   }
 
   // Handle standard internal link
+  const toUrl = cleanUrl(href);
   return (
-    <RouterLink to={href} {...props}>
+    <RouterLink to={toUrl} {...props}>
       {children}
     </RouterLink>
   );
@@ -154,7 +182,7 @@ export function useForm(initialValues = {}) {
         if (res.data.access_token || url.includes('login') || url.includes('register')) {
           window.location.href = prefixBasename(res.data.redirect);
         } else {
-          navigate(res.data.redirect);
+          navigate(cleanUrl(res.data.redirect));
         }
       }
     } catch (err) {
