@@ -316,11 +316,11 @@
 
     /* High-Fidelity Premium Modals */
     .modal-overlay {
-        @apply fixed inset-0 z-[100] bg-[#03070c]/80 backdrop-blur-xl flex items-center justify-center p-6;
+        @apply fixed inset-0 z-[100] bg-[#03070c]/80 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 overflow-y-auto;
     }
 
     .modal-box {
-        @apply w-full max-w-lg bg-[#080d14] border border-white/10 rounded-[3rem] p-10 sm:p-12 shadow-[0_40px_100px_rgba(0,0,0,0.8)] relative overflow-hidden;
+        @apply w-full max-w-lg bg-[#080d14] border border-white/10 rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-12 shadow-[0_40px_100px_rgba(0,0,0,0.8)] relative overflow-y-auto sm:overflow-visible max-h-[90vh] sm:max-h-none;
         background: radial-gradient(circle at top right, rgba(16,185,129,0.08), transparent 60%),
                     radial-gradient(circle at bottom left, rgba(59,130,246,0.05), transparent 60%);
     }
@@ -333,7 +333,7 @@
     }
 
     .modal-close-btn {
-        @apply absolute top-8 right-8 w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 hover:border-emerald-500/30 transition-all z-50;
+        @apply absolute top-4 right-4 sm:top-8 sm:right-8 w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/20 hover:border-emerald-500/30 transition-all z-50;
     }
 
     .bg-mesh {

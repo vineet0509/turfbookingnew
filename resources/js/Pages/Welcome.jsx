@@ -60,11 +60,11 @@ export default function Welcome({ auth, tenants = [], plans = [] }) {
             <Head title="Welcome to TurfBook" />
 
             {/* Navigation */}
-            <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${scrolled ? 'bg-black/80 backdrop-blur-xl py-4 border-b border-white/5' : 'py-8'}`}>
-                <div className="container mx-auto px-10 flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                        <span className="text-3xl">🏟️</span>
-                        <span className="text-2xl font-black uppercase tracking-tighter italic">
+            <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${scrolled ? 'bg-black/90 backdrop-blur-xl py-3 sm:py-4 border-b border-white/5' : 'py-4 sm:py-8'}`}>
+                <div className="container mx-auto px-4 sm:px-10 flex justify-between items-center">
+                    <div className="flex items-center gap-1.5 sm:gap-3">
+                        <span className="text-xl sm:text-3xl">🏟️</span>
+                        <span className="text-base sm:text-2xl font-black uppercase tracking-tighter italic">
                             Turf<span className="text-emerald-500">Book</span>
                         </span>
                     </div>
@@ -76,13 +76,13 @@ export default function Welcome({ auth, tenants = [], plans = [] }) {
                         <button onClick={() => setActiveModal('about')} className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-all">About Us</button>
                     </div>
 
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-3 sm:gap-6">
                         {auth.user ? (
-                            <Link href={route('dashboard')} className="bg-emerald-500 text-black px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-400 transition-all shadow-xl shadow-emerald-500/20">Dashboard →</Link>
+                            <Link href={route('dashboard')} className="bg-emerald-500 text-black px-4 sm:px-8 py-2 sm:py-3 rounded-lg sm:rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-emerald-400 transition-all shadow-xl shadow-emerald-500/20">Dashboard →</Link>
                         ) : (
                             <>
-                                <button onClick={() => setActiveModal('login')} className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-all">Sign In</button>
-                                <button onClick={() => setActiveModal('register')} className="bg-emerald-500 text-black px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-400 transition-all shadow-xl shadow-emerald-500/20">Get Started</button>
+                                <button onClick={() => setActiveModal('login')} className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-white transition-all">Sign In</button>
+                                <button onClick={() => setActiveModal('register')} className="bg-emerald-500 text-black px-4 sm:px-8 py-2 sm:py-3 rounded-lg sm:rounded-xl text-[8px] sm:text-[10px] font-black uppercase tracking-widest hover:bg-emerald-400 transition-all shadow-xl shadow-emerald-500/20">Get Started</button>
                             </>
                         )}
                     </div>
