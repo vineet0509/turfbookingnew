@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import Welcome from './Pages/Welcome';
 import Login from './Pages/Auth/Login';
 import Register from './Pages/Auth/Register';
@@ -17,7 +17,7 @@ import TenantHome from './Pages/Tenant/Home';
 import TenantCheckout from './Pages/Tenant/Checkout';
 import TenantBookingSuccess from './Pages/Tenant/BookingSuccess';
 import api from './utils/api';
-import { PageProvider } from './utils/inertia-compat';
+import { PageProvider, usePage } from './utils/inertia-compat';
 import '../css/app.css';
 import './bootstrap';
 
@@ -27,7 +27,6 @@ const getSubdomain = () => {
   const parts = hostname.split('.');
   
   if (parts.length >= 2 && parts[0] !== 'www' && parts[0] !== 'localhost') {
-    // Modify this if your main domain prefix is different
     if (parts[0] !== 'turfbook') {
       return parts[0];
     }
@@ -51,13 +50,244 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   return children;
 };
 
+// Loading Spinner Component
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center min-h-screen bg-[#0a0f16]">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
+  </div>
+);
+
+// General Page Wrapper to inject Inertia compatibility props
+const Page = ({ component: Component, extraProps = {} }) => {
+  const { props } = usePage();
+  return <Component {...props} {...extraProps} />;
+};
+
+// Wrapper for Welcome page
+function WelcomeWrapper() {
+  const [data, setData] = useState({ tenants: [], plans: [] });
+  const [loading, setLoading] = useState(true);
+  const { props } = usePage();
+
+  useEffect(() => {
+    api.get('/tenants-active')
+      .then(res => {
+        setData(res.data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) return <LoadingSpinner />;
+
+  return <Welcome {...props} tenants={data.tenants} plans={data.plans} />;
+}
+
+// Wrapper for TenantHome page
+function TenantHomeWrapper() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { props } = usePage();
+
+  useEffect(() => {
+    api.get('/details')
+      .then(res => {
+        setData(res.data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) return <LoadingSpinner />;
+
+  return (
+    <TenantHome
+      {...props}
+      tenant={data?.tenant || {}}
+      turfs={data?.turfs || []}
+    />
+  );
+}
+
+// Wrapper for TenantCheckout page
+function TenantCheckoutWrapper() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { props } = usePage();
+  const { slot } = useParams();
+
+  useEffect(() => {
+    api.get(`/slot/${slot}/checkout`)
+      .then(res => {
+        // Inertia response contains properties in .props
+        const responseData = res.data.props || res.data;
+        setData(responseData);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [slot]);
+
+  if (loading) return <LoadingSpinner />;
+
+  return (
+    <TenantCheckout
+      {...props}
+      tenant={data?.tenant || {}}
+      slot={data?.slot || {}}
+      razorpayOrder={data?.razorpayOrder || {}}
+      razorpayKeyId={data?.razorpayKeyId || ''}
+    />
+  );
+}
+
+// Wrapper for TenantBookingSuccess page
+function TenantBookingSuccessWrapper() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { props } = usePage();
+  const { booking } = useParams();
+
+  useEffect(() => {
+    api.get(`/booking/${booking}/success`)
+      .then(res => {
+        const responseData = res.data.props || res.data;
+        setData(responseData);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [booking]);
+
+  if (loading) return <LoadingSpinner />;
+
+  return (
+    <TenantBookingSuccess
+      {...props}
+      booking={data?.booking || {}}
+      tenant={data?.tenant || {}}
+    />
+  );
+}
+
+// Wrapper for OwnerDashboard page
+function OwnerDashboardWrapper() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { props } = usePage();
+
+  useEffect(() => {
+    api.get('/owner/dashboard-data')
+      .then(res => {
+        const responseData = res.data.props || res.data;
+        setData(responseData);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) return <LoadingSpinner />;
+
+  return (
+    <OwnerDashboard
+      {...props}
+      tenant={data?.tenant || {}}
+      bookings={data?.bookings || []}
+      customers={data?.customers || []}
+      payments={data?.payments || []}
+      initialTab="dashboard"
+    />
+  );
+}
+
+// Wrapper for OwnerBilling page
+function OwnerBillingWrapper() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { props } = usePage();
+
+  useEffect(() => {
+    api.get('/owner/billing')
+      .then(res => {
+        const responseData = res.data.props || res.data;
+        setData(responseData);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) return <LoadingSpinner />;
+
+  return (
+    <OwnerBilling
+      {...props}
+      plans={data?.plans || []}
+      currentSubscription={data?.currentSubscription || null}
+      tenant={data?.tenant || {}}
+    />
+  );
+}
+
+// Wrapper for CustomerDashboard page
+function CustomerDashboardWrapper() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { props } = usePage();
+
+  useEffect(() => {
+    api.get('/customer/dashboard-data')
+      .then(res => {
+        const responseData = res.data.props || res.data;
+        setData(responseData);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) return <LoadingSpinner />;
+
+  return (
+    <CustomerDashboard
+      {...props}
+      bookings={data?.bookings || []}
+    />
+  );
+}
+
+// Wrapper for AdminDashboard page
+function AdminDashboardWrapper() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const { props } = usePage();
+
+  useEffect(() => {
+    api.get('/admin/dashboard-data')
+      .then(res => {
+        const responseData = res.data.props || res.data;
+        setData(responseData);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) return <LoadingSpinner />;
+
+  return (
+    <AdminDashboard
+      {...props}
+      platformStats={data?.platformStats || {}}
+      tenants={data?.tenants || []}
+      revenueData={data?.revenueData || []}
+      globalConfig={data?.globalConfig || {}}
+      initialTab="overview"
+    />
+  );
+}
+
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
   const [loading, setLoading] = useState(true);
   const subdomain = getSubdomain();
 
   useEffect(() => {
-    // Fetch authenticated user context if token exists
     const token = localStorage.getItem('auth_token');
     if (token) {
       api.get('/user')
@@ -77,15 +307,8 @@ function App() {
     }
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-[#0a0f16]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingSpinner />;
 
-  // Value provided for Inertia `usePage()` compatibility hook
   const pageProps = {
     props: {
       auth: { user },
@@ -100,27 +323,27 @@ function App() {
         {subdomain ? (
           /* Tenant Subdomain SPA Routing */
           <Routes>
-            <Route path="/" element={<TenantHome />} />
-            <Route path="/slot/:slot/checkout" element={<ProtectedRoute><TenantCheckout /></ProtectedRoute>} />
-            <Route path="/booking/:booking/success" element={<ProtectedRoute><TenantBookingSuccess /></ProtectedRoute>} />
+            <Route path="/" element={<TenantHomeWrapper />} />
+            <Route path="/slot/:slot/checkout" element={<ProtectedRoute><TenantCheckoutWrapper /></ProtectedRoute>} />
+            <Route path="/booking/:booking/success" element={<ProtectedRoute><TenantBookingSuccessWrapper /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         ) : (
           /* Main SaaS Platform SPA Routing */
           <Routes>
-            <Route path="/" element={<Welcome />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password/:token" element={<ResetPassword />} />
-            <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/" element={<WelcomeWrapper />} />
+            <Route path="/login" element={<Page component={Login} />} />
+            <Route path="/register" element={<Page component={Register} />} />
+            <Route path="/forgot-password" element={<Page component={ForgotPassword} />} />
+            <Route path="/reset-password/:token" element={<Page component={ResetPassword} />} />
+            <Route path="/verify-email" element={<Page component={VerifyEmail} />} />
 
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/owner/setup" element={<ProtectedRoute allowedRoles={['owner']}><SetupTenant /></ProtectedRoute>} />
-            <Route path="/owner/dashboard" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboard /></ProtectedRoute>} />
-            <Route path="/owner/billing" element={<ProtectedRoute allowedRoles={['owner']}><OwnerBilling /></ProtectedRoute>} />
-            <Route path="/customer/dashboard" element={<ProtectedRoute allowedRoles={['customer']}><CustomerDashboard /></ProtectedRoute>} />
-            <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['super_admin']}><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Page component={Dashboard} /></ProtectedRoute>} />
+            <Route path="/owner/setup" element={<ProtectedRoute allowedRoles={['owner']}><Page component={SetupTenant} /></ProtectedRoute>} />
+            <Route path="/owner/dashboard" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboardWrapper /></ProtectedRoute>} />
+            <Route path="/owner/billing" element={<ProtectedRoute allowedRoles={['owner']}><OwnerBillingWrapper /></ProtectedRoute>} />
+            <Route path="/customer/dashboard" element={<ProtectedRoute allowedRoles={['customer']}><CustomerDashboardWrapper /></ProtectedRoute>} />
+            <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['super_admin']}><AdminDashboardWrapper /></ProtectedRoute>} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

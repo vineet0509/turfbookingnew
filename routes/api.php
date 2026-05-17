@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\ApiAuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\CustomerController;
@@ -30,12 +31,12 @@ Route::get('/tenants-active', function () {
 });
 
 // Auth Routes (Stateless / Sanctum)
-Route::post('/register', [RegisteredUserController::class, 'store']);
-Route::post('/login', [AuthenticatedSessionController::class, 'store']);
+Route::post('/register', [ApiAuthController::class, 'register']);
+Route::post('/login', [ApiAuthController::class, 'login']);
 
 // Authenticated Routes
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
+    Route::post('/logout', [ApiAuthController::class, 'logout']);
     
     // User context
     Route::get('/user', function (\Illuminate\Http\Request $request) {
