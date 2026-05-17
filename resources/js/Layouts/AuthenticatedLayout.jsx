@@ -25,7 +25,8 @@ export default function AuthenticatedLayout({ header, children }) {
                 { id: 'settings', label: 'Global Settings', icon: '⚙️', route: 'admin.settings' },
             ];
         } else if (user.role === 'owner') {
-            if (!user.owned_tenant) {
+            const hasTenant = user.ownedTenant || user.owned_tenant;
+            if (!hasTenant) {
                 return [
                     { id: 'setup', label: 'Arena Setup', icon: '🏟️', route: 'owner.setup' }
                 ];
@@ -54,7 +55,9 @@ export default function AuthenticatedLayout({ header, children }) {
     let activeTab = 'dashboard';
     if (user.role === 'customer') activeTab = 'bookings';
     if (user.role === 'super_admin') activeTab = 'overview';
-    if (user.role === 'owner' && !user.owned_tenant) activeTab = 'setup';
+    
+    const ownerHasTenant = user.ownedTenant || user.owned_tenant;
+    if (user.role === 'owner' && !ownerHasTenant) activeTab = 'setup';
 
     menuItems.forEach(item => {
         if (currentRoute === item.route) {
