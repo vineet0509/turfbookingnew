@@ -72,8 +72,8 @@ Route::group([], function () {
     require __DIR__.'/auth.php';
 });
 
-// Tenant Subdomain Routes
-Route::domain('{subdomain}.' . env('APP_URL', 'localhost'))->middleware(['tenant'])->group(function () {
+$domain = parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST) ?? env('APP_URL', 'localhost');
+Route::domain('{subdomain}.' . $domain)->middleware(['tenant'])->group(function () {
     Route::get('/', function ($subdomain) {
         $tenant = app('tenant');
         return Inertia::render('Tenant/Home', [
