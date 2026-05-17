@@ -209,7 +209,7 @@ function OwnerDashboardWrapper({ initialTab = 'dashboard' }) {
   const { props } = usePage();
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchDashboardData = () => {
     api.get('/owner/dashboard-data')
       .then(res => {
         if (res.data.component === 'Owner/SetupTenant') {
@@ -221,6 +221,10 @@ function OwnerDashboardWrapper({ initialTab = 'dashboard' }) {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
   }, [navigate]);
 
   if (loading) return <LoadingSpinner />;
@@ -233,6 +237,7 @@ function OwnerDashboardWrapper({ initialTab = 'dashboard' }) {
       customers={data?.customers || []}
       payments={data?.payments || []}
       initialTab={initialTab}
+      refreshData={fetchDashboardData}
     />
   );
 }

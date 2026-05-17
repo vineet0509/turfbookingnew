@@ -54,13 +54,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // Tenant Owner Routes
     Route::prefix('owner')->group(function () {
         Route::get('/dashboard-data', [TenantController::class, 'dashboard']);
-        Route::post('/setup', [TenantController::class, 'setup']);
+        Route::post('/setup', [TenantController::class, 'setup'])->name('owner.setup');
         Route::post('/settings', [TenantController::class, 'updateSettings'])->name('owner.settings.update');
-        Route::post('/turfs', [TenantController::class, 'storeTurf']);
-        Route::post('/turfs/{turf}/slots', [TenantController::class, 'generateSlots']);
-        Route::post('/bookings/manual', [TenantController::class, 'manualBooking']);
+        Route::post('/turfs', [TenantController::class, 'storeTurf'])->name('owner.turfs.store');
+        Route::post('/turfs/{turf}/slots', [TenantController::class, 'generateSlots'])->name('owner.turfs.slots.generate');
+        Route::post('/bookings/manual', [TenantController::class, 'manualBooking'])->name('owner.bookings.manual');
         Route::get('/billing', [SubscriptionController::class, 'index']);
-        Route::post('/subscribe', [SubscriptionController::class, 'subscribe']);
+        Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('owner.subscribe');
     });
 
     // Customer Routes

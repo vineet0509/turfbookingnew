@@ -2,7 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm, router } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 
-export default function Dashboard({ tenant, bookings = [], customers = [], payments = [], initialTab = 'dashboard' }) {
+export default function Dashboard({ tenant, bookings = [], customers = [], payments = [], initialTab = 'dashboard', refreshData }) {
     const [activeTab, setActiveTab] = useState(initialTab);
     const [showBookingModal, setShowBookingModal] = useState(false);
 
@@ -47,6 +47,9 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
             onSuccess: () => {
                 setShowBookingModal(false);
                 manualBookingForm.reset();
+                if (typeof refreshData === 'function') {
+                    refreshData();
+                }
             },
         });
     };
@@ -57,6 +60,9 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
             onSuccess: () => {
                 setShowTurfModal(false);
                 addTurfForm.reset();
+                if (typeof refreshData === 'function') {
+                    refreshData();
+                }
             },
         });
     };
@@ -66,6 +72,9 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
         settingsForm.post(route('owner.settings.update'), {
             onSuccess: () => {
                 alert('Arena configurations committed successfully!');
+                if (typeof refreshData === 'function') {
+                    refreshData();
+                }
             },
         });
     };
@@ -251,7 +260,7 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
                                         <div className="detail-item font-bold uppercase italic text-[10px]"><span>💰</span> ₹{turf.price_per_hour}/hr</div>
                                         <div className="detail-item font-bold uppercase italic text-[10px]"><span>🌟</span> Premium Pitch</div>
                                     </div>
-                                    <GenerateSlotsForm turfId={turf.id} />
+                                    <GenerateSlotsForm turfId={turf.id} refreshData={refreshData} />
                                 </div>
                             ))}
                         </div>
@@ -648,7 +657,7 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
     );
 }
 
-function GenerateSlotsForm({ turfId }) {
+function GenerateSlotsForm({ turfId, refreshData }) {
     const { data, setData, post, processing } = useForm({
         start_date: new Date().toISOString().split('T')[0],
         end_date: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
@@ -659,7 +668,14 @@ function GenerateSlotsForm({ turfId }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('owner.turfs.slots.generate', turfId));
+        post(route('owner.turfs.slots.generate', turfId), {
+            onSuccess: () => {
+                alert('Time slots auto-generated successfully!');
+                if (typeof refreshData === 'function') {
+                    refreshData();
+                }
+            }
+        });
     };
 
     return (
