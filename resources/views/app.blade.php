@@ -16,6 +16,7 @@
     @viteReactRefresh
     @vite(['resources/js/app.jsx'])
     <script>
+        window.APP_URL = "{{ url('/') }}";
         window.API_URL = "{{ url('/api') }}";
     </script>
 </head>

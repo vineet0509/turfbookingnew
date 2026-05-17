@@ -2,6 +2,31 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import api from './api';
 
+const getBasename = () => {
+  if (window.APP_URL) {
+    try {
+      const url = new URL(window.APP_URL);
+      const pathname = url.pathname.replace(/\/$/, '');
+      return pathname;
+    } catch (e) {
+      return '';
+    }
+  }
+  return '';
+};
+
+const prefixBasename = (url) => {
+  if (!url) return url;
+  if (url.startsWith('http://') || url.startsWith('https://') || !url.startsWith('/')) {
+    return url;
+  }
+  const basename = getBasename();
+  if (basename && url.startsWith(basename)) {
+    return url;
+  }
+  return `${basename}${url}`;
+};
+
 // Context for global state (shared Inertia props)
 const PageContext = createContext(null);
 
@@ -127,7 +152,7 @@ export function useForm(initialValues = {}) {
 // Compatibility router object
 export const router = {
   visit: (url, options = {}) => {
-    window.location.href = url;
+    window.location.href = prefixBasename(url);
   },
   get: async (url, options = {}) => {
     try {
@@ -141,7 +166,7 @@ export const router = {
     try {
       const res = await api.post(url, data);
       if (options.onSuccess) options.onSuccess(res);
-      if (res.data.redirect) window.location.href = res.data.redirect;
+      if (res.data.redirect) window.location.href = prefixBasename(res.data.redirect);
     } catch (err) {
       if (options.onError) options.onError(err);
     }
@@ -150,7 +175,7 @@ export const router = {
     try {
       const res = await api.put(url, data);
       if (options.onSuccess) options.onSuccess(res);
-      if (res.data.redirect) window.location.href = res.data.redirect;
+      if (res.data.redirect) window.location.href = prefixBasename(res.data.redirect);
     } catch (err) {
       if (options.onError) options.onError(err);
     }
@@ -159,7 +184,7 @@ export const router = {
     try {
       const res = await api.delete(url);
       if (options.onSuccess) options.onSuccess(res);
-      if (res.data.redirect) window.location.href = res.data.redirect;
+      if (res.data.redirect) window.location.href = prefixBasename(res.data.redirect);
     } catch (err) {
       if (options.onError) options.onError(err);
     }

@@ -34,6 +34,20 @@ const getSubdomain = () => {
   return null;
 };
 
+// Detect dynamic basename for subfolder hosting (e.g. XAMPP)
+const getBasename = () => {
+  if (window.APP_URL) {
+    try {
+      const url = new URL(window.APP_URL);
+      const pathname = url.pathname.replace(/\/$/, '');
+      return pathname;
+    } catch (e) {
+      return '';
+    }
+  }
+  return '';
+};
+
 // Route protection component
 const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const token = localStorage.getItem('auth_token');
@@ -81,6 +95,26 @@ function WelcomeWrapper() {
   if (loading) return <LoadingSpinner />;
 
   return <Welcome {...props} tenants={data.tenants} plans={data.plans} />;
+}
+
+// Wrapper for Register page
+function RegisterWrapper() {
+  const [data, setData] = useState({ tenants: [], plans: [] });
+  const [loading, setLoading] = useState(true);
+  const { props } = usePage();
+
+  useEffect(() => {
+    api.get('/tenants-active')
+      .then(res => {
+        setData(res.data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) return <LoadingSpinner />;
+
+  return <Register {...props} tenants={data.tenants} plans={data.plans} />;
 }
 
 // Wrapper for TenantHome page
@@ -319,7 +353,7 @@ function App() {
 
   return (
     <PageProvider value={pageProps}>
-      <Router>
+      <Router basename={getBasename()}>
         {subdomain ? (
           /* Tenant Subdomain SPA Routing */
           <Routes>
@@ -333,7 +367,7 @@ function App() {
           <Routes>
             <Route path="/" element={<WelcomeWrapper />} />
             <Route path="/login" element={<Page component={Login} />} />
-            <Route path="/register" element={<Page component={Register} />} />
+            <Route path="/register" element={<RegisterWrapper />} />
             <Route path="/forgot-password" element={<Page component={ForgotPassword} />} />
             <Route path="/reset-password/:token" element={<Page component={ResetPassword} />} />
             <Route path="/verify-email" element={<Page component={VerifyEmail} />} />
