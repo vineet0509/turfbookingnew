@@ -58,8 +58,14 @@ export function Link({ href, children, method = 'get', as = 'a', data = {}, ...p
       e.preventDefault();
       try {
         const res = await api[method.toLowerCase()](href, data);
+        if (res.data.access_token) {
+          localStorage.setItem('auth_token', res.data.access_token);
+        }
+        if (res.data.user) {
+          localStorage.setItem('user', JSON.stringify(res.data.user));
+        }
         if (res.data.redirect) {
-          navigate(res.data.redirect);
+          window.location.href = prefixBasename(res.data.redirect);
         }
       } catch (err) {
         console.error(err);
@@ -119,8 +125,20 @@ export function useForm(initialValues = {}) {
         options.onSuccess({ props: res.data });
       }
       
+      if (res.data.access_token) {
+        localStorage.setItem('auth_token', res.data.access_token);
+      }
+      if (res.data.user) {
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+      }
+
       if (res.data.redirect) {
-        navigate(res.data.redirect);
+        // Force a hard reload if this is a login/register success to sync SPA global state
+        if (res.data.access_token || url.includes('login') || url.includes('register')) {
+          window.location.href = prefixBasename(res.data.redirect);
+        } else {
+          navigate(res.data.redirect);
+        }
       }
     } catch (err) {
       setProcessing(false);
@@ -165,8 +183,16 @@ export const router = {
   post: async (url, data, options = {}) => {
     try {
       const res = await api.post(url, data);
+      if (res.data.access_token) {
+        localStorage.setItem('auth_token', res.data.access_token);
+      }
+      if (res.data.user) {
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+      }
       if (options.onSuccess) options.onSuccess(res);
-      if (res.data.redirect) window.location.href = prefixBasename(res.data.redirect);
+      if (res.data.redirect) {
+        window.location.href = prefixBasename(res.data.redirect);
+      }
     } catch (err) {
       if (options.onError) options.onError(err);
     }
@@ -174,8 +200,16 @@ export const router = {
   put: async (url, data, options = {}) => {
     try {
       const res = await api.put(url, data);
+      if (res.data.access_token) {
+        localStorage.setItem('auth_token', res.data.access_token);
+      }
+      if (res.data.user) {
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+      }
       if (options.onSuccess) options.onSuccess(res);
-      if (res.data.redirect) window.location.href = prefixBasename(res.data.redirect);
+      if (res.data.redirect) {
+        window.location.href = prefixBasename(res.data.redirect);
+      }
     } catch (err) {
       if (options.onError) options.onError(err);
     }
@@ -184,7 +218,16 @@ export const router = {
     try {
       const res = await api.delete(url);
       if (options.onSuccess) options.onSuccess(res);
-      if (res.data.redirect) window.location.href = prefixBasename(res.data.redirect);
+      
+      // If logging out or deleting, remove local storage auth keys
+      if (url.includes('logout')) {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user');
+      }
+      
+      if (res.data.redirect) {
+        window.location.href = prefixBasename(res.data.redirect);
+      }
     } catch (err) {
       if (options.onError) options.onError(err);
     }
