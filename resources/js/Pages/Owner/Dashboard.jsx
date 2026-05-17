@@ -69,18 +69,20 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
             <Head title="Owner Dashboard" />
 
             <div className="animate-fade-in">
-                {/* Stats Row */}
-                <div className="stats-row mb-16">
-                    {stats.map((s, i) => (
-                        <div key={i} className="stat-card" data-color={s.color}>
-                            <div className="stat-icon">{s.icon}</div>
-                            <div className="stat-info">
-                                <span className="stat-label">{s.label}</span>
-                                <strong className="stat-value">{s.value}</strong>
+                {/* Stats Row - Dashboard tab only */}
+                {activeTab === 'dashboard' && (
+                    <div className="stats-row mb-16">
+                        {stats.map((s, i) => (
+                            <div key={i} className="stat-card" data-color={s.color}>
+                                <div className="stat-icon">{s.icon}</div>
+                                <div className="stat-info">
+                                    <span className="stat-label">{s.label}</span>
+                                    <strong className="stat-value">{s.value}</strong>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
 
                 {activeTab === 'dashboard' && (
                     <div className="dashboard-grid grid grid-cols-1 lg:grid-cols-3 gap-10">

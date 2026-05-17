@@ -29,37 +29,39 @@ export default function AdminDashboard({ platformStats, tenants, revenueData, gl
             <Head title="Admin Master Intelligence" />
 
             <div className="animate-fade-in">
-                {/* Master Stats */}
-                <div className="stats-row mb-16">
-                    <div className="stat-card" data-color="blue">
-                        <div className="stat-icon">🏟️</div>
-                        <div className="stat-info">
-                            <span className="stat-label">Total Arenas</span>
-                            <strong className="stat-value">{platformStats?.tenants?.total || 0}</strong>
+                {/* Master Stats - Overview tab only */}
+                {activeTab === 'overview' && (
+                    <div className="stats-row mb-16">
+                        <div className="stat-card" data-color="blue">
+                            <div className="stat-icon">🏟️</div>
+                            <div className="stat-info">
+                                <span className="stat-label">Total Arenas</span>
+                                <strong className="stat-value">{platformStats?.tenants?.total || 0}</strong>
+                            </div>
+                        </div>
+                        <div className="stat-card" data-color="emerald">
+                            <div className="stat-icon">✅</div>
+                            <div className="stat-info">
+                                <span className="stat-label">Confirmed Bookings</span>
+                                <strong className="stat-value">{platformStats?.bookings?.confirmed || 0}</strong>
+                            </div>
+                        </div>
+                        <div className="stat-card" data-color="rose">
+                            <div className="stat-icon">📈</div>
+                            <div className="stat-info">
+                                <span className="stat-label">Platform Revenue</span>
+                                <strong className="stat-value">₹{platformStats?.revenue?.total || 0}</strong>
+                            </div>
+                        </div>
+                        <div className="stat-card" data-color="amber">
+                            <div className="stat-icon">👥</div>
+                            <div className="stat-info">
+                                <span className="stat-label">Total Players</span>
+                                <strong className="stat-value">{platformStats?.users?.total || 0}</strong>
+                            </div>
                         </div>
                     </div>
-                    <div className="stat-card" data-color="emerald">
-                        <div className="stat-icon">✅</div>
-                        <div className="stat-info">
-                            <span className="stat-label">Confirmed Bookings</span>
-                            <strong className="stat-value">{platformStats?.bookings?.confirmed || 0}</strong>
-                        </div>
-                    </div>
-                    <div className="stat-card" data-color="rose">
-                        <div className="stat-icon">📈</div>
-                        <div className="stat-info">
-                            <span className="stat-label">Platform Revenue</span>
-                            <strong className="stat-value">₹{platformStats?.revenue?.total || 0}</strong>
-                        </div>
-                    </div>
-                    <div className="stat-card" data-color="amber">
-                        <div className="stat-icon">👥</div>
-                        <div className="stat-info">
-                            <span className="stat-label">Total Players</span>
-                            <strong className="stat-value">{platformStats?.users?.total || 0}</strong>
-                        </div>
-                    </div>
-                </div>
+                )}
 
                 {activeTab === 'overview' && (
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 animate-fade-in">
