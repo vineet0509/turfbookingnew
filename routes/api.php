@@ -87,8 +87,8 @@ Route::domain('{subdomain}.' . $domain)->middleware(['tenant'])->group(function 
     });
     
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/slot/{slot}/checkout', [BookingController::class, 'checkout']);
-        Route::post('/slot/{slot}/book', [BookingController::class, 'store']);
-        Route::get('/booking/{booking}/success', [BookingController::class, 'success']);
+        Route::get('/slot/{slot}/checkout', [BookingController::class, 'checkout'])->name('tenant.checkout');
+        Route::post('/slot/{slot}/book', [BookingController::class, 'store'])->name('tenant.book');
+        Route::get('/booking/{booking}/success', [BookingController::class, 'success'])->name('tenant.success');
     });
 });
