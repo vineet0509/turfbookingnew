@@ -94,9 +94,6 @@ Route::prefix('owner')->name('owner.')->group(function () {
     Route::get('/players', function () { return view('app'); })->name('players');
     Route::get('/payments', function () { return view('app'); })->name('payments');
     Route::get('/settings', function () { return view('app'); })->name('settings');
-    Route::post('/bookings/manual', function () { return view('app'); })->name('bookings.manual');
-    Route::post('/turfs', function () { return view('app'); })->name('turfs.store');
-    Route::post('/subscribe', function () { return view('app'); })->name('subscribe');
 });
 
 // Admin SPA Routes

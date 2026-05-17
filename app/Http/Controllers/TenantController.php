@@ -100,21 +100,27 @@ class TenantController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:200',
             'turf_type' => 'required|in:cricket,football,badminton,multi',
-            'capacity' => 'integer',
-            'price_per_hour' => 'numeric',
-            'weekend_price_per_hour' => 'numeric',
+            'capacity' => 'integer|nullable',
+            'price_per_hour' => 'numeric|nullable',
+            'weekend_price_per_hour' => 'numeric|nullable',
             'pitch_type' => 'string|nullable',
         ]);
 
         $tenant = $request->user()->ownedTenant;
 
         if (!$tenant) {
-            abort(403, 'No tenant found for user.');
+            return response()->json([
+                'errors' => ['error' => 'No tenant found for user.']
+            ], 403);
         }
 
-        $tenant->turfs()->create($validated);
+        $turf = $tenant->turfs()->create($validated);
 
-        return redirect()->back()->with('success', 'Turf ground created successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Turf ground created successfully.',
+            'turf' => $turf
+        ]);
     }
 
     /**
@@ -178,7 +184,10 @@ class TenantController extends Controller
             }
         }
 
-        return redirect()->back()->with('success', "$slotsCreated slots generated successfully.");
+        return response()->json([
+            'success' => true,
+            'message' => "$slotsCreated slots generated successfully."
+        ]);
     }
     /**
      * Handle manual booking from the owner dashboard.
@@ -217,7 +226,9 @@ class TenantController extends Controller
             ]);
         } else {
             if ($slot->status === 'booked') {
-                return redirect()->back()->withErrors(['error' => 'Slot already booked.']);
+                return response()->json([
+                    'errors' => ['error' => 'Slot already booked.']
+                ], 422);
             }
             $slot->update(['status' => 'booked']);
         }
@@ -234,7 +245,10 @@ class TenantController extends Controller
             'booking_ref' => 'MAN-' . strtoupper(Str::random(8)),
         ]);
 
-        return redirect()->back()->with('success', 'Manual booking recorded.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Manual booking recorded.'
+        ]);
     }
 
     /**
