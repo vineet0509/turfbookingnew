@@ -42,8 +42,8 @@ class TenantController extends Controller
         ->latest()
         ->get();
 
-        // Detect active tab from route name
-        $routeName = $request->route()->getName();
+        // Detect active tab from route name safely (fallback to empty string if null)
+        $routeName = $request->route() ? ($request->route()->getName() ?? '') : '';
         $activeTab = 'dashboard';
         if (str_contains($routeName, 'turfs')) $activeTab = 'turfs';
         if (str_contains($routeName, 'players')) $activeTab = 'players';
