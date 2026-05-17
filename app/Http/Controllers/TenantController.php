@@ -82,7 +82,10 @@ class TenantController extends Controller
             'secondary_color' => '#3B82F6',
         ]);
 
-        return redirect(route('owner.dashboard'));
+        return response()->json([
+            'success' => true,
+            'redirect' => '/owner/dashboard'
+        ]);
     }
 
     /**
