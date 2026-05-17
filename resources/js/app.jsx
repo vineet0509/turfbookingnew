@@ -207,16 +207,21 @@ function OwnerDashboardWrapper({ initialTab = 'dashboard' }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const { props } = usePage();
+  const navigate = useNavigate();
 
   useEffect(() => {
     api.get('/owner/dashboard-data')
       .then(res => {
+        if (res.data.component === 'Owner/SetupTenant') {
+          navigate('/owner/setup');
+          return;
+        }
         const responseData = res.data.props || res.data;
         setData(responseData);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [navigate]);
 
   if (loading) return <LoadingSpinner />;
 
