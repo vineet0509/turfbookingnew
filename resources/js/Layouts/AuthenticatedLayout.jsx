@@ -6,6 +6,7 @@ export default function AuthenticatedLayout({ header, children }) {
     const [showAboutModal, setShowAboutModal] = useState(false);
     const [showContactModal, setShowContactModal] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     // Import Inter font directly for global consistency
     useEffect(() => {
@@ -57,8 +58,24 @@ export default function AuthenticatedLayout({ header, children }) {
 
     return (
         <div className="app-shell">
+            {/* Mobile Sidebar Backdrop */}
+            {sidebarOpen && (
+                <div 
+                    className="fixed inset-0 z-40 bg-[#03070c]/80 backdrop-blur-sm lg:hidden transition-all duration-300"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className="sidebar">
+            <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+                {/* Mobile Close Button */}
+                <button 
+                    onClick={() => setSidebarOpen(false)}
+                    className="absolute top-6 right-6 lg:hidden w-8 h-8 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center text-white text-xs hover:bg-white/10 active:scale-95 transition-all"
+                >
+                    ✕
+                </button>
+
                 <div className="sidebar-logo">
                     <span className="logo-icon">🏟️</span>
                     <span className="logo-text">TurfBook</span>
@@ -70,6 +87,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             key={item.id}
                             href={route(item.route)}
                             className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
+                            onClick={() => setSidebarOpen(false)}
                         >
                             <span className="nav-icon">{item.icon}</span>
                             <span className="nav-label">{item.label}</span>
@@ -114,18 +132,26 @@ export default function AuthenticatedLayout({ header, children }) {
             <main className="main-area">
                 {/* Top Bar */}
                 <header className="topbar">
-                    <div className="topbar-left">
-                        <h1 className="page-title italic uppercase tracking-tighter font-black text-2xl">{header || 'Platform Control Center'}</h1>
-                        <span className="topbar-sub">Welcome back, {user.name}! 👋</span>
+                    <div className="topbar-left flex items-center">
+                        <button 
+                            onClick={() => setSidebarOpen(true)}
+                            className="lg:hidden w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white text-lg mr-4 hover:bg-white/10 transition-all active:scale-95"
+                        >
+                            ☰
+                        </button>
+                        <div>
+                            <h1 className="page-title italic uppercase tracking-tighter font-black text-lg sm:text-2xl">{header || 'Platform Control Center'}</h1>
+                            <span className="topbar-sub">Welcome back, {user.name}! 👋</span>
+                        </div>
                     </div>
                     
-                    <div className="topbar-right flex items-center gap-6">
-                        <div className="today-badge bg-white/5 border border-white/5 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400">
+                    <div className="topbar-right flex items-center gap-4 sm:gap-6">
+                        <div className="today-badge bg-white/5 border border-white/5 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hidden md:block">
                             📅 {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                         </div>
 
                         {user.role === 'owner' && (
-                            <div className="trial-alert-badge bg-amber-500/10 border border-amber-500/20 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-amber-500 flex items-center gap-2 cursor-pointer hover:bg-amber-500/20 transition-all">
+                            <div className="trial-alert-badge bg-amber-500/10 border border-amber-500/20 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-amber-500 items-center gap-2 cursor-pointer hover:bg-amber-500/20 transition-all hidden sm:flex">
                                 🎁 <span>TRIAL ENDS IN 5 DAYS</span>
                             </div>
                         )}
@@ -133,14 +159,14 @@ export default function AuthenticatedLayout({ header, children }) {
                         <div className="relative">
                             <button 
                                 onClick={() => setShowNotifications(!showNotifications)}
-                                className={`w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all ${showNotifications ? 'bg-white/10 border-emerald-500/30' : ''}`}
+                                className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all ${showNotifications ? 'bg-white/10 border-emerald-500/30' : ''}`}
                             >
-                                <span className="text-xl">🔔</span>
+                                <span className="text-lg sm:text-xl">🔔</span>
                                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 border-2 border-[#0a0f16] rounded-full flex items-center justify-center text-[8px] font-black text-white">2</span>
                             </button>
 
                             {showNotifications && (
-                                <div className="absolute right-0 mt-4 w-80 bg-[#161b22] border border-white/10 rounded-2xl shadow-2xl p-6 z-50 animate-fade-in">
+                                <div className="absolute right-0 mt-4 w-72 sm:w-80 bg-[#161b22] border border-white/10 rounded-2xl shadow-2xl p-6 z-50 animate-fade-in">
                                     <div className="flex justify-between items-center mb-6">
                                         <h3 className="text-xs font-black uppercase tracking-widest text-slate-500">Activity Feed</h3>
                                         <button className="text-[10px] font-black uppercase text-slate-500 hover:text-white">Clear All</button>
@@ -166,13 +192,13 @@ export default function AuthenticatedLayout({ header, children }) {
                         </div>
 
                         {user.role === 'owner' && (
-                            <Link href={route('owner.dashboard', { tab: 'dashboard' })} className="btn-premium px-8 py-3.5 text-[10px] shadow-[0_10px_30px_rgba(16,185,129,0.2)]">
-                                + New Booking
+                            <Link href={route('owner.dashboard', { tab: 'dashboard' })} className="btn-premium px-4 sm:px-8 py-2.5 sm:py-3.5 text-[9px] sm:text-[10px] shadow-[0_10px_30px_rgba(16,185,129,0.2)]">
+                                + Booking
                             </Link>
                         )}
                         {user.role === 'customer' && (
-                            <Link href="/" className="btn-premium px-8 py-3.5 text-[10px] shadow-[0_10px_30px_rgba(16,185,129,0.2)]">
-                                + Book New Turf
+                            <Link href="/" className="btn-premium px-4 sm:px-8 py-2.5 sm:py-3.5 text-[9px] sm:text-[10px] shadow-[0_10px_30px_rgba(16,185,129,0.2)]">
+                                + Turf
                             </Link>
                         )}
                     </div>

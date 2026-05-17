@@ -203,7 +203,7 @@ function TenantBookingSuccessWrapper() {
 }
 
 // Wrapper for OwnerDashboard page
-function OwnerDashboardWrapper() {
+function OwnerDashboardWrapper({ initialTab = 'dashboard' }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const { props } = usePage();
@@ -227,7 +227,7 @@ function OwnerDashboardWrapper() {
       bookings={data?.bookings || []}
       customers={data?.customers || []}
       payments={data?.payments || []}
-      initialTab="dashboard"
+      initialTab={initialTab}
     />
   );
 }
@@ -287,7 +287,7 @@ function CustomerDashboardWrapper() {
 }
 
 // Wrapper for AdminDashboard page
-function AdminDashboardWrapper() {
+function AdminDashboardWrapper({ initialTab = 'overview' }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const { props } = usePage();
@@ -311,7 +311,7 @@ function AdminDashboardWrapper() {
       tenants={data?.tenants || []}
       revenueData={data?.revenueData || []}
       globalConfig={data?.globalConfig || {}}
-      initialTab="overview"
+      initialTab={initialTab}
     />
   );
 }
@@ -374,10 +374,17 @@ function App() {
 
             <Route path="/dashboard" element={<ProtectedRoute><Page component={Dashboard} /></ProtectedRoute>} />
             <Route path="/owner/setup" element={<ProtectedRoute allowedRoles={['owner']}><Page component={SetupTenant} /></ProtectedRoute>} />
-            <Route path="/owner/dashboard" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboardWrapper /></ProtectedRoute>} />
+            <Route path="/owner/dashboard" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboardWrapper initialTab="dashboard" /></ProtectedRoute>} />
+            <Route path="/owner/turfs" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboardWrapper initialTab="turfs" /></ProtectedRoute>} />
+            <Route path="/owner/players" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboardWrapper initialTab="players" /></ProtectedRoute>} />
+            <Route path="/owner/payments" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboardWrapper initialTab="payments" /></ProtectedRoute>} />
+            <Route path="/owner/settings" element={<ProtectedRoute allowedRoles={['owner']}><OwnerDashboardWrapper initialTab="settings" /></ProtectedRoute>} />
             <Route path="/owner/billing" element={<ProtectedRoute allowedRoles={['owner']}><OwnerBillingWrapper /></ProtectedRoute>} />
             <Route path="/customer/dashboard" element={<ProtectedRoute allowedRoles={['customer']}><CustomerDashboardWrapper /></ProtectedRoute>} />
-            <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['super_admin']}><AdminDashboardWrapper /></ProtectedRoute>} />
+            <Route path="/admin/dashboard" element={<ProtectedRoute allowedRoles={['super_admin']}><AdminDashboardWrapper initialTab="overview" /></ProtectedRoute>} />
+            <Route path="/admin/arenas" element={<ProtectedRoute allowedRoles={['super_admin']}><AdminDashboardWrapper initialTab="arenas" /></ProtectedRoute>} />
+            <Route path="/admin/revenue" element={<ProtectedRoute allowedRoles={['super_admin']}><AdminDashboardWrapper initialTab="revenue" /></ProtectedRoute>} />
+            <Route path="/admin/settings" element={<ProtectedRoute allowedRoles={['super_admin']}><AdminDashboardWrapper initialTab="settings" /></ProtectedRoute>} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
