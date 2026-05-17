@@ -25,6 +25,24 @@ Route::domain('{subdomain}.' . $domain)->group(function () {
 // Utility route to run migrations and seed subscription plans on production shared hosting
 Route::get('/run-migrations-secret', function () {
     try {
+        // Force drop and recreate personal_access_tokens table directly to ensure UUID compatibility
+        \Illuminate\Support\Facades\Schema::dropIfExists('personal_access_tokens');
+        \Illuminate\Support\Facades\Schema::create('personal_access_tokens', function (\Illuminate\Database\Schema\Blueprint $table) {
+            $table->id();
+            $table->string('tokenable_type');
+            $table->uuid('tokenable_id'); // Make absolutely sure it is a UUID!
+            $table->string('name');
+            $table->string('token', 64)->unique();
+            $table->text('abilities')->nullable();
+            $table->timestamp('last_used_at')->nullable();
+            $table->timestamp('expires_at')->nullable();
+            $table->timestamps();
+            
+            $table->index(['tokenable_type', 'tokenable_id']);
+        });
+        
+        $directRecreateMessage = "Directly dropped and recreated 'personal_access_tokens' table with UUID support successfully!<br>";
+
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
         $migrateOutput = \Illuminate\Support\Facades\Artisan::output();
         
@@ -34,7 +52,8 @@ Route::get('/run-migrations-secret', function () {
         ]);
         $seedOutput = \Illuminate\Support\Facades\Artisan::output();
         
-        return '<h3>Migrations & Seeding Run Successfully!</h3>' . 
+        return '<h3>Deployment Direct Correction Success!</h3>' . 
+               '<p>' . $directRecreateMessage . '</p>' .
                '<strong>Migration Output:</strong><pre>' . e($migrateOutput) . '</pre><br>' .
                '<strong>Seeding Output:</strong><pre>' . e($seedOutput) . '</pre>';
     } catch (\Exception $e) {
