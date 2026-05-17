@@ -82,8 +82,12 @@ class TenantController extends Controller
             'secondary_color' => '#3B82F6',
         ]);
 
+        $user = $request->user();
+        $user->load('ownedTenant');
+
         return response()->json([
             'success' => true,
+            'user' => $user,
             'redirect' => '/owner/dashboard'
         ]);
     }
