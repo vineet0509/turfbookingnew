@@ -30,7 +30,7 @@ export default function AdminDashboard({ platformStats, tenants, revenueData, gl
 
             <div className="animate-fade-in">
                 {/* Master Stats */}
-                <div className="stats-row mb-16 px-0 pt-0">
+                <div className="stats-row mb-16">
                     <div className="stat-card" data-color="blue">
                         <div className="stat-icon">🏟️</div>
                         <div className="stat-info">

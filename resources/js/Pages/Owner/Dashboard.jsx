@@ -70,7 +70,7 @@ export default function Dashboard({ tenant, bookings = [], customers = [], payme
 
             <div className="animate-fade-in">
                 {/* Stats Row */}
-                <div className="stats-row mb-16 px-0 pt-0">
+                <div className="stats-row mb-16">
                     {stats.map((s, i) => (
                         <div key={i} className="stat-card" data-color={s.color}>
                             <div className="stat-icon">{s.icon}</div>
