@@ -46,6 +46,10 @@ class ApiAuthController extends Controller
 
     public function register(Request $request)
     {
+        if ($request->has('tenant_id') && $request->tenant_id === '') {
+            $request->merge(['tenant_id' => null]);
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
