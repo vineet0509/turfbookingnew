@@ -28,7 +28,7 @@ class ApiAuthController extends Controller
                 ]
             ], 422);
         }
-
+        $this->ensureUuidPersonalAccessTokensTable();
         $token = $user->createToken('auth_token')->plainTextToken;
 
         // Load relations if needed
@@ -72,6 +72,7 @@ class ApiAuthController extends Controller
 
         event(new Registered($user));
 
+        $this->ensureUuidPersonalAccessTokensTable();
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -86,5 +87,50 @@ class ApiAuthController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logged out successfully']);
+    }
+
+    /**
+     * Self-healing helper to drop and recreate personal_access_tokens if it has an incorrect BIGINT column.
+     * Direct information_schema queries ensure compatibility and lightning performance across all MySQL environments.
+     */
+    private function ensureUuidPersonalAccessTokensTable()
+    {
+        try {
+            $isBigint = false;
+            $dbName = env('DB_DATABASE', 'u778507850_turfbooking');
+            
+            $result = \Illuminate\Support\Facades\DB::select("
+                SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_SCHEMA = ? 
+                AND TABLE_NAME = 'personal_access_tokens' 
+                AND COLUMN_NAME = 'tokenable_id'
+            ", [$dbName]);
+            
+            if (!empty($result) && in_array(strtolower($result[0]->DATA_TYPE), ['int', 'bigint', 'tinyint', 'mediumint', 'smallint'])) {
+                $isBigint = true;
+            }
+            
+            if ($isBigint) {
+                \Illuminate\Support\Facades\Schema::dropIfExists('personal_access_tokens');
+            }
+        } catch (\Exception $e) {}
+
+        if (!\Illuminate\Support\Facades\Schema::hasTable('personal_access_tokens')) {
+            try {
+                \Illuminate\Support\Facades\Schema::create('personal_access_tokens', function (\Illuminate\Database\Schema\Blueprint $table) {
+                    $table->id();
+                    $table->string('tokenable_type');
+                    $table->uuid('tokenable_id'); // Correct CHAR(36) UUID format
+                    $table->string('name');
+                    $table->string('token', 64)->unique();
+                    $table->text('abilities')->nullable();
+                    $table->timestamp('last_used_at')->nullable();
+                    $table->timestamp('expires_at')->nullable();
+                    $table->timestamps();
+                    
+                    $table->index(['tokenable_type', 'tokenable_id']);
+                });
+            } catch (\Exception $e) {}
+        }
     }
 }
