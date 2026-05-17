@@ -13,6 +13,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': '/resources/js',
+            '@inertiajs/react': '/resources/js/utils/inertia-compat.jsx',
         },
     },
     build: {

@@ -20,8 +20,12 @@ class TenantMiddleware
         $host = $request->getHost();
         $parts = explode('.', $host);
         
-        // Check if we are on a subdomain (e.g. not localhost or www.localhost)
-        if (count($parts) >= 2 && $parts[0] !== 'www' && $parts[0] !== 'localhost') {
+        // Check if we are on a subdomain (e.g. not localhost or www.localhost or the main app prefix)
+        $appHost = parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST) ?? 'localhost';
+        $appParts = explode('.', $appHost);
+        $appPrefix = $appParts[0] ?? '';
+
+        if (count($parts) >= 2 && $parts[0] !== 'www' && $parts[0] !== 'localhost' && $parts[0] !== $appPrefix) {
             $subdomain = $parts[0];
             
             $tenant = Tenant::where('subdomain', $subdomain)->where('is_active', true)->first();
