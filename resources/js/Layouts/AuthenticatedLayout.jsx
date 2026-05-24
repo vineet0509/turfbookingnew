@@ -144,7 +144,7 @@ export default function AuthenticatedLayout({ header, children }) {
                     <div className="topbar-left flex items-center">
                         <button 
                             onClick={() => setSidebarOpen(true)}
-                            className="lg:hidden w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white text-lg mr-4 hover:bg-white/10 transition-all active:scale-95"
+                            className="lg:hidden w-10 h-10 rounded-full bg-white border border-[rgba(15,23,42,0.06)] flex items-center justify-center text-[var(--text-primary)] text-lg mr-4 hover:bg-[var(--bg-light-alt)] transition-all active:scale-95 shadow-sm"
                         >
                             ☰
                         </button>
@@ -155,12 +155,12 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
                     
                     <div className="topbar-right flex items-center gap-4 sm:gap-6">
-                        <div className="today-badge bg-white/5 border border-white/5 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-400 hidden md:block">
+                        <div className="today-badge bg-white border border-[rgba(15,23,42,0.06)] px-4 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest text-[var(--text-secondary)] hidden md:block italic shadow-sm">
                             📅 {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                         </div>
 
                         {user.role === 'owner' && (
-                            <div className="trial-alert-badge bg-amber-500/10 border border-amber-500/20 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-amber-500 items-center gap-2 cursor-pointer hover:bg-amber-500/20 transition-all hidden sm:flex">
+                            <div className="trial-alert-badge bg-amber-500/10 border border-amber-500/20 px-4 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest text-amber-600 items-center gap-2 cursor-pointer hover:bg-amber-500/20 transition-all hidden sm:flex">
                                 🎁 <span>TRIAL ENDS IN 5 DAYS</span>
                             </div>
                         )}
@@ -168,31 +168,31 @@ export default function AuthenticatedLayout({ header, children }) {
                         <div className="relative">
                             <button 
                                 onClick={() => setShowNotifications(!showNotifications)}
-                                className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all ${showNotifications ? 'bg-white/10 border-emerald-500/30' : ''}`}
+                                className={`w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border border-[rgba(15,23,42,0.06)] flex items-center justify-center hover:bg-[var(--bg-light-alt)] transition-all relative shadow-sm ${showNotifications ? 'bg-[var(--bg-light-alt)] border-[rgba(15,23,42,0.12)]' : ''}`}
                             >
                                 <span className="text-lg sm:text-xl">🔔</span>
-                                <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 border-2 border-[#0a0f16] rounded-full flex items-center justify-center text-[8px] font-black text-white">2</span>
+                                <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 border-2 border-white rounded-full flex items-center justify-center text-[8px] font-black text-white">2</span>
                             </button>
 
                             {showNotifications && (
-                                <div className="absolute right-0 mt-4 w-72 sm:w-80 bg-[#161b22] border border-white/10 rounded-2xl shadow-2xl p-6 z-50 animate-fade-in">
+                                <div className="absolute right-0 mt-4 w-72 sm:w-80 bg-white border border-[rgba(15,23,42,0.06)] rounded-2xl shadow-xl p-6 z-50 animate-fade-in">
                                     <div className="flex justify-between items-center mb-6">
-                                        <h3 className="text-xs font-black uppercase tracking-widest text-slate-500">Activity Feed</h3>
-                                        <button className="text-[10px] font-black uppercase text-slate-500 hover:text-white">Clear All</button>
+                                        <h3 className="text-xs font-black uppercase tracking-widest text-[var(--text-muted)]">Activity Feed</h3>
+                                        <button className="text-[10px] font-black uppercase text-[var(--text-secondary)] hover:text-[var(--text-primary)]">Clear All</button>
                                     </div>
                                     <div className="space-y-4">
-                                        <div className="flex gap-4 p-3 rounded-xl hover:bg-white/5 transition-all">
-                                            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm">✅</div>
+                                        <div className="flex gap-4 p-3 rounded-xl hover:bg-[var(--bg-light-alt)] transition-all">
+                                            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-sm">✅</div>
                                             <div>
-                                                <div className="text-[11px] font-bold text-white leading-tight">New booking confirmed for Arjun Kumar</div>
-                                                <div className="text-[9px] font-bold text-slate-500 mt-1 uppercase">2 mins ago</div>
+                                                <div className="text-[11px] font-bold text-[var(--text-primary)] leading-tight">New booking confirmed for Arjun Kumar</div>
+                                                <div className="text-[9px] font-bold text-[var(--text-muted)] mt-1 uppercase">2 mins ago</div>
                                             </div>
                                         </div>
-                                        <div className="flex gap-4 p-3 rounded-xl hover:bg-white/5 transition-all">
-                                            <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center text-sm">🚨</div>
+                                        <div className="flex gap-4 p-3 rounded-xl hover:bg-[var(--bg-light-alt)] transition-all">
+                                            <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center text-sm">🚨</div>
                                             <div>
-                                                <div className="text-[11px] font-bold text-white leading-tight">Payment pending for slot #BK892</div>
-                                                <div className="text-[9px] font-bold text-slate-500 mt-1 uppercase">1 hour ago</div>
+                                                <div className="text-[11px] font-bold text-[var(--text-primary)] leading-tight">Payment pending for slot #BK892</div>
+                                                <div className="text-[9px] font-bold text-[var(--text-muted)] mt-1 uppercase">1 hour ago</div>
                                             </div>
                                         </div>
                                     </div>
@@ -201,12 +201,12 @@ export default function AuthenticatedLayout({ header, children }) {
                         </div>
 
                         {user.role === 'owner' && (
-                            <Link href={route('owner.dashboard', { tab: 'dashboard' })} className="btn-premium px-4 sm:px-8 py-2.5 sm:py-3.5 text-[9px] sm:text-[10px] shadow-[0_10px_30px_rgba(16,185,129,0.2)]">
+                            <Link href={route('owner.dashboard', { tab: 'dashboard' })} className="btn-premium px-4 sm:px-8 py-2.5 sm:py-3.5 text-[9px] sm:text-[10px]">
                                 + Booking
                             </Link>
                         )}
                         {user.role === 'customer' && (
-                            <Link href="/" className="btn-premium px-4 sm:px-8 py-2.5 sm:py-3.5 text-[9px] sm:text-[10px] shadow-[0_10px_30px_rgba(16,185,129,0.2)]">
+                            <Link href="/" className="btn-premium px-4 sm:px-8 py-2.5 sm:py-3.5 text-[9px] sm:text-[10px]">
                                 + Turf
                             </Link>
                         )}
@@ -223,8 +223,9 @@ export default function AuthenticatedLayout({ header, children }) {
             {showAboutModal && (
                 <div className="modal-overlay" onClick={() => setShowAboutModal(false)}>
                     <div className="modal-box glass-panel animate-slide-up" onClick={e => e.stopPropagation()}>
-                        <h2 className="text-2xl font-black uppercase italic tracking-tight mb-6 text-white">🚀 About TurfBook</h2>
-                        <div className="text-slate-400 font-medium text-sm leading-relaxed space-y-4">
+                        <button onClick={() => setShowAboutModal(false)} className="modal-close-btn">✕</button>
+                        <h2 className="text-2xl font-black uppercase italic tracking-tight mb-6 text-[var(--text-primary)]">🚀 About TurfBook</h2>
+                        <div className="text-[var(--text-secondary)] font-medium text-sm leading-relaxed space-y-4">
                             <p>TurfBook is a premium Sports Management Solution developed by <strong>Vynkra Technologies</strong>. We specialize in helping arena owners automate their business operations.</p>
                             <p>From manual entry to automated digital scheduling, we provide the tools you need to grow your sports community. Our platform is built on transparency, reliability, and high performance.</p>
                         </div>
@@ -236,20 +237,21 @@ export default function AuthenticatedLayout({ header, children }) {
             {showContactModal && (
                 <div className="modal-overlay" onClick={() => setShowContactModal(false)}>
                     <div className="modal-box glass-panel max-w-md animate-slide-up" onClick={e => e.stopPropagation()}>
-                        <h2 className="text-2xl font-black uppercase italic tracking-tight mb-8 text-center text-white">📧 Contact Support</h2>
+                        <button onClick={() => setShowContactModal(false)} className="modal-close-btn">✕</button>
+                        <h2 className="text-2xl font-black uppercase italic tracking-tight mb-8 text-center text-[var(--text-primary)]">📧 Contact Support</h2>
                         <div className="space-y-4">
-                            <div className="p-5 rounded-2xl bg-white/5 border border-white/5 flex items-center gap-5">
+                            <div className="p-5 rounded-2xl bg-[var(--bg-light-alt)] border border-[rgba(15,23,42,0.06)] flex items-center gap-5">
                                 <span className="text-2xl">✉️</span>
                                 <div>
-                                    <div className="font-black text-xs uppercase tracking-widest text-white mb-1">Technical Support</div>
-                                    <div className="text-xs font-bold text-slate-500">support@vynkra.com</div>
+                                    <div className="font-black text-xs uppercase tracking-widest text-[var(--text-primary)] mb-1">Technical Support</div>
+                                    <div className="text-xs font-bold text-[var(--text-secondary)]">support@vynkra.com</div>
                                 </div>
                             </div>
-                            <div className="p-5 rounded-2xl bg-white/5 border border-white/5 flex items-center gap-5">
+                            <div className="p-5 rounded-2xl bg-[var(--bg-light-alt)] border border-[rgba(15,23,42,0.06)] flex items-center gap-5">
                                 <span className="text-2xl">📞</span>
                                 <div>
-                                    <div className="font-black text-xs uppercase tracking-widest text-white mb-1">Business Inquiries</div>
-                                    <div className="text-xs font-bold text-slate-500">+91 98765 43210</div>
+                                    <div className="font-black text-xs uppercase tracking-widest text-[var(--text-primary)] mb-1">Business Inquiries</div>
+                                    <div className="text-xs font-bold text-[var(--text-secondary)]">+91 98765 43210</div>
                                 </div>
                             </div>
                         </div>
