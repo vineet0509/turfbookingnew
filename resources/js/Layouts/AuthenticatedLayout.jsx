@@ -219,43 +219,47 @@ export default function AuthenticatedLayout({ header, children }) {
                 </div>
             </main>
 
-            {/* Modals */}
+            {/* Modals with Scroll-Safe Flex Containers */}
             {showAboutModal && (
                 <div className="modal-overlay" onClick={() => setShowAboutModal(false)}>
-                    <div className="modal-box glass-panel animate-slide-up" onClick={e => e.stopPropagation()}>
+                    <div className="modal-box glass-panel flex flex-col p-0 animate-slide-up" onClick={e => e.stopPropagation()}>
                         <button onClick={() => setShowAboutModal(false)} className="modal-close-btn">✕</button>
-                        <h2 className="text-2xl font-black uppercase italic tracking-tight mb-6 text-[var(--text-primary)]">🚀 About TurfBook</h2>
-                        <div className="text-[var(--text-secondary)] font-medium text-sm leading-relaxed space-y-4">
-                            <p>TurfBook is a premium Sports Management Solution developed by <strong>Vynkra Technologies</strong>. We specialize in helping arena owners automate their business operations.</p>
-                            <p>From manual entry to automated digital scheduling, we provide the tools you need to grow your sports community. Our platform is built on transparency, reliability, and high performance.</p>
+                        <div className="overflow-y-auto p-6 sm:p-12 max-h-[90vh] flex-1">
+                            <h2 className="text-2xl font-black uppercase italic tracking-tight mb-6 text-[var(--text-primary)]">🚀 About TurfBook</h2>
+                            <div className="text-[var(--text-secondary)] font-medium text-sm leading-relaxed space-y-4">
+                                <p>TurfBook is a premium Sports Management Solution developed by <strong>Vynkra Technologies</strong>. We specialize in helping arena owners automate their business operations.</p>
+                                <p>From manual entry to automated digital scheduling, we provide the tools you need to grow your sports community. Our platform is built on transparency, reliability, and high performance.</p>
+                            </div>
+                            <button className="btn-primary w-full mt-10 py-4 font-black uppercase tracking-widest text-[10px]" onClick={() => setShowAboutModal(false)}>Close</button>
                         </div>
-                        <button className="btn-primary w-full mt-10 py-4 font-black uppercase tracking-widest text-[10px]" onClick={() => setShowAboutModal(false)}>Close</button>
                     </div>
                 </div>
             )}
 
             {showContactModal && (
                 <div className="modal-overlay" onClick={() => setShowContactModal(false)}>
-                    <div className="modal-box glass-panel max-w-md animate-slide-up" onClick={e => e.stopPropagation()}>
+                    <div className="modal-box glass-panel max-w-md flex flex-col p-0 animate-slide-up" onClick={e => e.stopPropagation()}>
                         <button onClick={() => setShowContactModal(false)} className="modal-close-btn">✕</button>
-                        <h2 className="text-2xl font-black uppercase italic tracking-tight mb-8 text-center text-[var(--text-primary)]">📧 Contact Support</h2>
-                        <div className="space-y-4">
-                            <div className="p-5 rounded-2xl bg-[var(--bg-light-alt)] border border-[rgba(15,23,42,0.06)] flex items-center gap-5">
-                                <span className="text-2xl">✉️</span>
-                                <div>
-                                    <div className="font-black text-xs uppercase tracking-widest text-[var(--text-primary)] mb-1">Technical Support</div>
-                                    <div className="text-xs font-bold text-[var(--text-secondary)]">support@vynkra.com</div>
+                        <div className="overflow-y-auto p-6 sm:p-12 max-h-[90vh] flex-1">
+                            <h2 className="text-2xl font-black uppercase italic tracking-tight mb-8 text-center text-[var(--text-primary)]">📧 Contact Support</h2>
+                            <div className="space-y-4">
+                                <div className="p-5 rounded-2xl bg-[var(--bg-light-alt)] border border-[rgba(15,23,42,0.06)] flex items-center gap-5">
+                                    <span className="text-2xl">✉️</span>
+                                    <div>
+                                        <div className="font-black text-xs uppercase tracking-widest text-[var(--text-primary)] mb-1">Technical Support</div>
+                                        <div className="text-xs font-bold text-[var(--text-secondary)]">support@vynkra.com</div>
+                                    </div>
+                                </div>
+                                <div className="p-5 rounded-2xl bg-[var(--bg-light-alt)] border border-[rgba(15,23,42,0.06)] flex items-center gap-5">
+                                    <span className="text-2xl">📞</span>
+                                    <div>
+                                        <div className="font-black text-xs uppercase tracking-widest text-[var(--text-primary)] mb-1">Business Inquiries</div>
+                                        <div className="text-xs font-bold text-[var(--text-secondary)]">+91 98765 43210</div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="p-5 rounded-2xl bg-[var(--bg-light-alt)] border border-[rgba(15,23,42,0.06)] flex items-center gap-5">
-                                <span className="text-2xl">📞</span>
-                                <div>
-                                    <div className="font-black text-xs uppercase tracking-widest text-[var(--text-primary)] mb-1">Business Inquiries</div>
-                                    <div className="text-xs font-bold text-[var(--text-secondary)]">+91 98765 43210</div>
-                                </div>
-                            </div>
+                            <button className="btn-primary w-full mt-10 py-4 font-black uppercase tracking-widest text-[10px]" onClick={() => setShowContactModal(false)}>Close</button>
                         </div>
-                        <button className="btn-primary w-full mt-10 py-4 font-black uppercase tracking-widest text-[10px]" onClick={() => setShowContactModal(false)}>Close</button>
                     </div>
                 </div>
             )}

@@ -404,154 +404,158 @@ export default function Welcome({ auth, tenants = [], plans = [] }) {
                 </div>
             </footer>
 
-            {/* Modals */}
+            {/* Modals with Scroll-Safe Flex Containers */}
             {activeModal === 'login' && (
                 <div className="modal-overlay" onClick={closeAllModals}>
-                    <div className="modal-box animate-slide-up" onClick={e => e.stopPropagation()}>
+                    <div className="modal-box flex flex-col p-0 animate-slide-up" onClick={e => e.stopPropagation()}>
                         <button onClick={closeAllModals} className="modal-close-btn">✕</button>
-                        <div className="text-6xl mb-10 drop-shadow-[0_4px_10px_rgba(0,0,0,0.1)]">🔐</div>
-                        <h2 className="text-4xl font-black uppercase tracking-tighter italic mb-2 text-[var(--text-primary)]">Welcome Back</h2>
-                        <p className="text-[var(--text-secondary)] font-black uppercase tracking-[0.2em] text-[9px] mb-10 italic ms-1">Access your operational intelligence center.</p>
+                        <div className="overflow-y-auto p-6 sm:p-12 max-h-[90vh] flex-1">
+                            <div className="text-6xl mb-10 drop-shadow-[0_4px_10px_rgba(0,0,0,0.1)]">🔐</div>
+                            <h2 className="text-4xl font-black uppercase tracking-tighter italic mb-2 text-[var(--text-primary)]">Welcome Back</h2>
+                            <p className="text-[var(--text-secondary)] font-black uppercase tracking-[0.2em] text-[9px] mb-10 italic ms-1">Access your operational intelligence center.</p>
 
-                        <form onSubmit={onLoginSubmit} className="space-y-10">
-                            <div className="form-group">
-                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Authentication Key (Email)</label>
-                                <input 
-                                    type="email" 
-                                    className="form-control py-6 italic text-sm" 
-                                    placeholder="operator@vynkra.com"
-                                    value={loginForm.data.email}
-                                    onChange={e => loginForm.setData('email', e.target.value)}
-                                    required
-                                />
-                                {loginForm.errors.email && <div className="text-rose-500 text-[10px] font-black mt-2 uppercase italic tracking-widest ms-2">{loginForm.errors.email}</div>}
-                            </div>
-                            <div className="form-group">
-                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Access Cipher (Password)</label>
-                                <input 
-                                    type="password" 
-                                    className="form-control py-6 italic text-sm" 
-                                    placeholder="••••••••••••" 
-                                    value={loginForm.data.password}
-                                    onChange={e => loginForm.setData('password', e.target.value)}
-                                    required
-                                />
-                                {loginForm.errors.password && <div className="text-rose-500 text-[10px] font-black mt-2 uppercase italic tracking-widest ms-2">{loginForm.errors.password}</div>}
-                            </div>
-                            <button type="submit" disabled={loginForm.processing} className="btn-premium w-full py-8 text-xs font-black uppercase italic tracking-[0.3em] shadow-md">
-                                {loginForm.processing ? 'DECRYPTING...' : 'INITIALIZE SESSION →'}
-                            </button>
-                        </form>
-                        
-                        <p className="text-center mt-16 text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] italic">
-                            Missing an arena node? <button onClick={() => setActiveModal('register')} className="text-[var(--accent)] ms-1 hover:underline bg-transparent border-none p-0 cursor-pointer">Deploy New Node</button>
-                        </p>
+                            <form onSubmit={onLoginSubmit} className="space-y-6">
+                                <div className="form-group">
+                                    <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Authentication Key (Email)</label>
+                                    <input 
+                                        type="email" 
+                                        className="form-control py-4 italic text-sm" 
+                                        placeholder="operator@vynkra.com"
+                                        value={loginForm.data.email}
+                                        onChange={e => loginForm.setData('email', e.target.value)}
+                                        required
+                                    />
+                                    {loginForm.errors.email && <div className="text-rose-500 text-[10px] font-black mt-2 uppercase italic tracking-widest ms-2">{loginForm.errors.email}</div>}
+                                </div>
+                                <div className="form-group">
+                                    <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Access Cipher (Password)</label>
+                                    <input 
+                                        type="password" 
+                                        className="form-control py-4 italic text-sm" 
+                                        placeholder="••••••••••••" 
+                                        value={loginForm.data.password}
+                                        onChange={e => loginForm.setData('password', e.target.value)}
+                                        required
+                                    />
+                                    {loginForm.errors.password && <div className="text-rose-500 text-[10px] font-black mt-2 uppercase italic tracking-widest ms-2">{loginForm.errors.password}</div>}
+                                </div>
+                                <button type="submit" disabled={loginForm.processing} className="btn-premium w-full py-4 text-xs font-black uppercase italic tracking-[0.3em]">
+                                    {loginForm.processing ? 'DECRYPTING...' : 'INITIALIZE SESSION →'}
+                                </button>
+                            </form>
+                            
+                            <p className="text-center mt-12 text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)] italic">
+                                Missing an arena node? <button onClick={() => setActiveModal('register')} className="text-[var(--accent)] ms-1 hover:underline bg-transparent border-none p-0 cursor-pointer">Deploy New Node</button>
+                            </p>
+                        </div>
                     </div>
                 </div>
             )}
 
             {activeModal === 'register' && (
                 <div className="modal-overlay" onClick={closeAllModals}>
-                    <div className="modal-box animate-slide-up" onClick={e => e.stopPropagation()}>
+                    <div className="modal-box flex flex-col p-0 animate-slide-up" onClick={e => e.stopPropagation()}>
                         <button onClick={closeAllModals} className="modal-close-btn">✕</button>
-                        <div className="text-6xl mb-10 drop-shadow-[0_4px_10px_rgba(0,0,0,0.1)]">{registerForm.data.role === 'customer' ? '🏃' : '🏟️'}</div>
-                        <h2 className="text-3xl font-black uppercase tracking-tighter italic mb-2 text-[var(--text-primary)]">
-                            {registerForm.data.role === 'customer' ? 'Athlete Join' : 'Deploy Arena'}
-                        </h2>
-                        <p className="text-[var(--text-secondary)] font-black uppercase tracking-[0.2em] text-[9px] mb-10 italic ms-1">
-                            {registerForm.data.role === 'customer' ? 'Join the global athlete network.' : 'Join the #1 sports management platform.'}
-                        </p>
+                        <div className="overflow-y-auto p-6 sm:p-12 max-h-[90vh] flex-1">
+                            <div className="text-6xl mb-10 drop-shadow-[0_4px_10px_rgba(0,0,0,0.1)]">{registerForm.data.role === 'customer' ? '🏃' : '🏟️'}</div>
+                            <h2 className="text-3xl font-black uppercase tracking-tighter italic mb-2 text-[var(--text-primary)]">
+                                {registerForm.data.role === 'customer' ? 'Athlete Join' : 'Deploy Arena'}
+                            </h2>
+                            <p className="text-[var(--text-secondary)] font-black uppercase tracking-[0.2em] text-[9px] mb-10 italic ms-1">
+                                {registerForm.data.role === 'customer' ? 'Join the global athlete network.' : 'Join the #1 sports management platform.'}
+                            </p>
 
-                        <form onSubmit={onRegisterSubmit} className="space-y-10">
-                            <div className="form-group">
-                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Identity Signature (Full Name)</label>
-                                <input 
-                                    type="text" 
-                                    className="form-control py-6 italic text-sm" 
-                                    placeholder="Arjun Kumar" 
-                                    value={registerForm.data.name}
-                                    onChange={e => registerForm.setData('name', e.target.value)}
-                                    required
-                                />
-                                {registerForm.errors.name && <div className="text-rose-500 text-[10px] font-black mt-2 uppercase italic tracking-widest ms-2">{registerForm.errors.name}</div>}
-                            </div>
-                            <div className="form-group">
-                                <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Contact Protocol (Email)</label>
-                                <input 
-                                    type="email" 
-                                    className="form-control py-6 italic text-sm" 
-                                    placeholder="operator@vynkra.com" 
-                                    value={registerForm.data.email}
-                                    onChange={e => registerForm.setData('email', e.target.value)}
-                                    required
-                                />
-                                {registerForm.errors.email && <div className="text-rose-500 text-[10px] font-black mt-2 uppercase italic tracking-widest ms-2">{registerForm.errors.email}</div>}
-                            </div>
-                            <div className="grid grid-cols-2 gap-10">
+                            <form onSubmit={onRegisterSubmit} className="space-y-6">
                                 <div className="form-group">
-                                    <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Secure Cipher</label>
+                                    <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Identity Signature (Full Name)</label>
                                     <input 
-                                        type="password" 
-                                        className="form-control py-6 italic text-sm" 
-                                        placeholder="••••••••" 
-                                        value={registerForm.data.password}
-                                        onChange={e => registerForm.setData('password', e.target.value)}
+                                        type="text" 
+                                        className="form-control py-4 italic text-sm" 
+                                        placeholder="Arjun Kumar" 
+                                        value={registerForm.data.name}
+                                        onChange={e => registerForm.setData('name', e.target.value)}
                                         required
                                     />
-                                    {registerForm.errors.password && <div className="text-rose-500 text-[10px] font-black mt-2 uppercase italic tracking-widest ms-2">{registerForm.errors.password}</div>}
+                                    {registerForm.errors.name && <div className="text-rose-500 text-[10px] font-black mt-2 uppercase italic tracking-widest ms-2">{registerForm.errors.name}</div>}
                                 </div>
                                 <div className="form-group">
-                                    <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Verify Cipher</label>
+                                    <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Contact Protocol (Email)</label>
                                     <input 
-                                        type="password" 
-                                        className="form-control py-6 italic text-sm" 
-                                        placeholder="••••••••" 
-                                        value={registerForm.data.password_confirmation}
-                                        onChange={e => registerForm.setData('password_confirmation', e.target.value)}
+                                        type="email" 
+                                        className="form-control py-4 italic text-sm" 
+                                        placeholder="operator@vynkra.com" 
+                                        value={registerForm.data.email}
+                                        onChange={e => registerForm.setData('email', e.target.value)}
                                         required
                                     />
+                                    {registerForm.errors.email && <div className="text-rose-500 text-[10px] font-black mt-2 uppercase italic tracking-widest ms-2">{registerForm.errors.email}</div>}
                                 </div>
-                            </div>
-                            {registerForm.data.role === 'customer' && (
-                                <div className="form-group animate-fade-in">
-                                    <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Select Arena Ground</label>
-                                    <select 
-                                        className="form-control py-6 italic text-sm bg-white"
-                                        value={registerForm.data.tenant_id}
-                                        onChange={e => registerForm.setData('tenant_id', e.target.value)}
-                                        required
-                                    >
-                                        <option value="">-- Discover Available Turfs --</option>
-                                        {tenants.map(t => (
-                                            <option key={t.id} value={t.id}>{t.name} - {t.city}</option>
-                                        ))}
-                                    </select>
-                                    <p className="mt-4 text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-widest ms-2 italic">Select the arena you want to join. You can book slots here after registration.</p>
+                                <div className="grid grid-cols-2 gap-5">
+                                    <div className="form-group">
+                                        <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Secure Cipher</label>
+                                        <input 
+                                            type="password" 
+                                            className="form-control py-4 italic text-sm" 
+                                            placeholder="••••••••" 
+                                            value={registerForm.data.password}
+                                            onChange={e => registerForm.setData('password', e.target.value)}
+                                            required
+                                        />
+                                        {registerForm.errors.password && <div className="text-rose-500 text-[10px] font-black mt-2 uppercase italic tracking-widest ms-2">{registerForm.errors.password}</div>}
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Verify Cipher</label>
+                                        <input 
+                                            type="password" 
+                                            className="form-control py-4 italic text-sm" 
+                                            placeholder="••••••••" 
+                                            value={registerForm.data.password_confirmation}
+                                            onChange={e => registerForm.setData('password_confirmation', e.target.value)}
+                                            required
+                                        />
+                                    </div>
                                 </div>
-                            )}
+                                {registerForm.data.role === 'customer' && (
+                                    <div className="form-group animate-fade-in">
+                                        <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Select Arena Ground</label>
+                                        <select 
+                                            className="form-control py-4 italic text-sm bg-white"
+                                            value={registerForm.data.tenant_id}
+                                            onChange={e => registerForm.setData('tenant_id', e.target.value)}
+                                            required
+                                        >
+                                            <option value="">-- Discover Available Turfs --</option>
+                                            {tenants.map(t => (
+                                                <option key={t.id} value={t.id}>{t.name} - {t.city}</option>
+                                            ))}
+                                        </select>
+                                        <p className="mt-4 text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-widest ms-2 italic">Select the arena you want to join. You can book slots here after registration.</p>
+                                    </div>
+                                )}
 
-                            {registerForm.data.role === 'owner' && (
-                                <div className="form-group animate-fade-in">
-                                    <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Select Your Operations Plan</label>
-                                    <select 
-                                        className="form-control py-6 italic text-sm bg-white"
-                                        value={registerForm.data.plan_id}
-                                        onChange={e => registerForm.setData('plan_id', e.target.value)}
-                                        required
-                                    >
-                                        <option value="">-- Choose Scaling Tier --</option>
-                                        {plans.map(p => (
-                                            <option key={p.id} value={p.id}>{p.display_name} - ₹{p.price_monthly}/mo</option>
-                                        ))}
-                                    </select>
-                                    <p className="mt-4 text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-widest ms-2 italic">Select the plan that fits your arena scale. You can upgrade later.</p>
-                                </div>
-                            )}
+                                {registerForm.data.role === 'owner' && (
+                                    <div className="form-group animate-fade-in">
+                                        <label className="block text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] mb-4 ms-2">Select Your Operations Plan</label>
+                                        <select 
+                                            className="form-control py-4 italic text-sm bg-white"
+                                            value={registerForm.data.plan_id}
+                                            onChange={e => registerForm.setData('plan_id', e.target.value)}
+                                            required
+                                        >
+                                            <option value="">-- Choose Scaling Tier --</option>
+                                            {plans.map(p => (
+                                                <option key={p.id} value={p.id}>{p.display_name} - ₹{p.price_monthly}/mo</option>
+                                            ))}
+                                        </select>
+                                        <p className="mt-4 text-[8px] font-bold text-[var(--text-muted)] uppercase tracking-widest ms-2 italic">Select the plan that fits your arena scale. You can upgrade later.</p>
+                                    </div>
+                                )}
 
-                            <button type="submit" disabled={registerForm.processing} className="btn-premium w-full py-8 text-xs font-black uppercase italic tracking-[0.3em] shadow-md">
-                                {registerForm.processing ? 'INITIALIZING...' : 'COMMENCE DEPLOYMENT →'}
-                            </button>
-                        </form>
+                                <button type="submit" disabled={registerForm.processing} className="btn-premium w-full py-4 text-xs font-black uppercase italic tracking-[0.3em] shadow-md">
+                                    {registerForm.processing ? 'INITIALIZING...' : 'COMMENCE DEPLOYMENT →'}
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             )}
@@ -559,41 +563,43 @@ export default function Welcome({ auth, tenants = [], plans = [] }) {
             {/* About Modal */}
             {activeModal === 'about' && (
                 <div className="modal-overlay" onClick={closeAllModals}>
-                    <div className="modal-box max-w-xl animate-slide-up" onClick={e => e.stopPropagation()}>
-                        <div className="absolute bottom-0 right-0 p-12 text-5xl opacity-[0.03] font-black italic tracking-tighter uppercase leading-none pointer-events-none text-[var(--text-primary)]">STORY</div>
-                        <button onClick={closeAllModals} className="modal-close-btn top-8 right-8">✕</button>
-                        
-                        <div className="flex items-center gap-6 mb-12">
-                            <div className="w-16 h-16 rounded-full bg-[rgba(99,102,241,0.05)] flex items-center justify-center text-3xl italic font-black shadow-md">🚀</div>
-                            <div>
-                                <h2 className="text-3xl font-black uppercase italic tracking-tighter text-[var(--text-primary)]">Our Story</h2>
-                                <p className="text-[8px] font-black uppercase tracking-[0.3em] text-[var(--accent)] italic">Transforming Arena Management since 2026</p>
-                            </div>
-                        </div>
-
-                        <div className="space-y-12">
-                            <div className="text-[var(--text-secondary)] font-bold leading-relaxed space-y-6 text-base uppercase tracking-widest italic">
-                                <p>TurfBook was born out of a simple observation: sports arena owners were spending too much time on administrative paperwork and not enough time growing their athletic communities.</p>
-                                <p>Partnering with <strong className="text-[var(--text-primary)]">Vynkra Technologies</strong>, we've built a multi-tenant operating system that scales businesses seamlessly.</p>
-                                
-                                <div className="p-6 bg-[rgba(99,102,241,0.02)] border-l-4 border-[var(--accent)] rounded-e-2xl">
-                                    <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-[var(--accent)] mb-2 italic">The Mission</h4>
-                                    <p className="text-xs text-[var(--text-secondary)] italic font-black">To build the world's most powerful operating system for sports communities.</p>
+                    <div className="modal-box max-w-xl flex flex-col p-0 animate-slide-up" onClick={e => e.stopPropagation()}>
+                        <button onClick={closeAllModals} className="modal-close-btn">✕</button>
+                        <div className="overflow-y-auto p-6 sm:p-12 max-h-[90vh] flex-1">
+                            <div className="absolute bottom-0 right-0 p-12 text-5xl opacity-[0.03] font-black italic tracking-tighter uppercase leading-none pointer-events-none text-[var(--text-primary)]">STORY</div>
+                            
+                            <div className="flex items-center gap-6 mb-12">
+                                <div className="w-16 h-16 rounded-full bg-[rgba(16,185,129,0.05)] flex items-center justify-center text-3xl italic font-black shadow-md">🚀</div>
+                                <div>
+                                    <h2 className="text-3xl font-black uppercase italic tracking-tighter text-[var(--text-primary)]">Our Story</h2>
+                                    <p className="text-[8px] font-black uppercase tracking-[0.3em] text-[var(--accent)] italic">Transforming Arena Management since 2026</p>
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-                                {[
-                                    { label: 'Arenas', value: '500+', color: 'text-[var(--accent-warm)]' },
-                                    { label: 'Players', value: '10k+', color: 'text-[var(--accent)]' },
-                                    { label: 'Uptime', value: '99.9%', color: 'text-amber-500' },
-                                    { label: 'Support', value: '24/7', color: 'text-emerald-500' }
-                                ].map((stat, i) => (
-                                    <div key={i} className="p-6 rounded-[20px] bg-[var(--bg-light-alt)] border border-[rgba(15,23,42,0.04)] text-center shadow-sm">
-                                        <div className={`text-3xl font-black italic tracking-tighter ${stat.color}`}>{stat.value}</div>
-                                        <div className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] mt-3 italic">{stat.label}</div>
+                            <div className="space-y-12">
+                                <div className="text-[var(--text-secondary)] font-bold leading-relaxed space-y-6 text-base uppercase tracking-widest italic">
+                                    <p>TurfBook was born out of a simple observation: sports arena owners were spending too much time on administrative paperwork and not enough time growing their athletic communities.</p>
+                                    <p>Partnering with <strong className="text-[var(--text-primary)]">Vynkra Technologies</strong>, we've built a multi-tenant operating system that scales businesses seamlessly.</p>
+                                    
+                                    <div className="p-6 bg-[rgba(16,185,129,0.02)] border-l-4 border-[var(--accent)] rounded-e-2xl">
+                                        <h4 className="text-[9px] font-black uppercase tracking-[0.4em] text-[var(--accent)] mb-2 italic">The Mission</h4>
+                                        <p className="text-xs text-[var(--text-secondary)] italic font-black">To build the world's most powerful operating system for sports communities.</p>
                                     </div>
-                                ))}
+                                </div>
+
+                                <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                                    {[
+                                        { label: 'Arenas', value: '500+', color: 'text-[var(--accent-warm)]' },
+                                        { label: 'Players', value: '10k+', color: 'text-[var(--accent)]' },
+                                        { label: 'Uptime', value: '99.9%', color: 'text-amber-500' },
+                                        { label: 'Support', value: '24/7', color: 'text-emerald-500' }
+                                    ].map((stat, i) => (
+                                        <div key={i} className="p-6 rounded-[20px] bg-[var(--bg-light-alt)] border border-[rgba(15,23,42,0.04)] text-center shadow-sm">
+                                            <div className={`text-3xl font-black italic tracking-tighter ${stat.color}`}>{stat.value}</div>
+                                            <div className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] mt-3 italic">{stat.label}</div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
