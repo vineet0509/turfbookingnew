@@ -1,6 +1,15 @@
 import { Link, Head, useForm } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 
+const cities = [
+    { name: 'Indore', state: 'Madhya Pradesh', venues: '79+ live venues', popular: 'Heavens Turf And Cafe', price: '1,000', img: '/images/cities/indore.png' },
+    { name: 'Mumbai', state: 'Maharashtra', venues: '12+ live venues', popular: 'Maharashtra Turf Club', price: '3,300', img: '/images/cities/mumbai.png' },
+    { name: 'Kolkata', state: 'West Bengal', venues: '4+ live venues', popular: 'Kasba Turf', price: '2,000', img: '/images/cities/kolkata.png' },
+    { name: 'Delhi', state: 'Delhi', venues: '5+ live venues', popular: 'Narayana Singh Sports Club', price: '1,000', img: '/images/cities/delhi.png' },
+    { name: 'Ahmedabad', state: 'Gujarat', venues: '10+ live venues', popular: 'Ace Turf Box', price: '1,300', img: '/images/cities/ahmedabad.png' },
+    { name: 'Hyderabad', state: 'Telangana', venues: '9+ live venues', popular: 'Nex Arena Attapur', price: '2,400', img: '/images/cities/hyderabad.png' }
+];
+
 export default function Welcome({ auth, tenants = [], plans = [] }) {
     const [activeModal, setActiveModal] = useState(null); // 'login', 'register', 'terms', 'about', 'contact'
     const [selectedSlot, setSelectedSlot] = useState(null);
@@ -175,6 +184,66 @@ export default function Welcome({ auth, tenants = [], plans = [] }) {
                                 <div className="text-5xl mb-10 group-hover:scale-110 transition-transform duration-500">{feature.icon}</div>
                                 <h3 className="text-2xl font-black uppercase tracking-tight mb-4 text-[var(--text-primary)] italic">{feature.title}</h3>
                                 <p className="text-[var(--text-secondary)] font-bold text-sm leading-relaxed uppercase">{feature.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Explore Venues by City Section matching reference screenshot */}
+            <section id="cities" className="py-40 bg-white/40 border-t border-[rgba(15,23,42,0.06)] relative z-10">
+                <div className="container mx-auto px-10">
+                    <div className="text-center mb-32">
+                        <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-[rgba(99,102,241,0.05)] border border-[rgba(99,102,241,0.1)] text-[var(--accent)] text-[10px] font-black uppercase tracking-widest mb-8">
+                            🗺️ Nationwide Coverage
+                        </div>
+                        <h2 className="text-5xl md:text-6xl font-black uppercase italic tracking-tighter mb-4 text-[var(--text-primary)]">
+                            Discover Arenas in <span className="text-gradient">Top Cities</span>
+                        </h2>
+                        <p className="text-[var(--text-secondary)] font-bold uppercase tracking-widest text-[10px] italic">
+                            Book premium sports venues across major hubs instantly
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        {cities.map((city, i) => (
+                            <div key={i} className="group rounded-[24px] overflow-hidden bg-white border border-[rgba(15,23,42,0.06)] hover:border-[rgba(15,23,42,0.12)] hover:shadow-lg transition-all duration-500 flex flex-col shadow-sm">
+                                {/* Image part with state tag */}
+                                <div className="h-56 relative overflow-hidden bg-slate-100">
+                                    <img 
+                                        src={city.img} 
+                                        alt={city.name} 
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                    />
+                                    <div className="absolute top-6 left-6 px-4 py-1.5 bg-slate-900/80 backdrop-blur-md rounded-full text-[8px] font-black uppercase tracking-widest text-white shadow-sm">
+                                        {city.state}
+                                    </div>
+                                </div>
+                                
+                                {/* Text details */}
+                                <div className="p-8 flex-1 flex flex-col justify-between">
+                                    <div>
+                                        <h3 className="text-2xl font-black uppercase tracking-tighter text-[var(--text-primary)] italic">
+                                            {city.name}
+                                        </h3>
+                                        <p className="text-xs font-bold text-[var(--text-secondary)] mt-2 uppercase tracking-wide">
+                                            {city.venues} &middot; <span className="text-[var(--text-muted)]">{city.popular}</span>
+                                        </p>
+                                    </div>
+                                    
+                                    <div className="mt-8 pt-6 border-t border-[rgba(15,23,42,0.04)] flex justify-between items-center">
+                                        <div>
+                                            <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] block">Starting From</span>
+                                            <span className="text-xl font-black italic text-[var(--accent)]">₹{city.price}</span>
+                                        </div>
+                                        <button 
+                                            onClick={() => { registerForm.setData('role', 'customer'); setActiveModal('register'); }} 
+                                            className="text-[10px] font-black uppercase tracking-widest text-[var(--text-primary)] group-hover:text-[var(--accent)] hover:translate-x-1 transition-all flex items-center gap-2 italic bg-transparent border-none cursor-pointer"
+                                        >
+                                            Explore city →
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     </div>
